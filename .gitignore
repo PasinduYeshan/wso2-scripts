@@ -1,0 +1,5 @@
+# Zip files
+*.zip
+
+deploy/mysql_is/patches/*
+*/wso2is*/*
