@@ -3,3 +3,5 @@
 
 deploy/mysql_is/patches/*
 */wso2is*/*
+
+.env
