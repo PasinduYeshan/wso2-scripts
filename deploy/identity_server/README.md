@@ -9,6 +9,7 @@ Before proceeding, ensure the following software is installed on your system:
 - **Docker**: Required for running database instances in containers.
 - **Python 3**: Necessary for some scripting operations.
 - **Unzip**: Needed to extract the WSO2 IS ZIP file.
+- **Node.js** and npm: Essential for MSSQL database configuration, especially on ARM64 architectures.
 - A text editor (like Vim, Nano, or VS Code) for editing configuration files.
 
 ## Port Availability Check
@@ -24,10 +25,10 @@ Before running the script, ensure the following ports are not being used by othe
 To check and free up these ports, use:
 
 ```bash
-# Check what is running on a specific port
+# Check what is running on a specific port.
 sudo lsof -i :<port_number>
 
-# Kill the process using the port (if necessary)
+# Kill the process using the port (if necessary).
 sudo kill -9 <PID>
 ```
 
@@ -37,21 +38,19 @@ Open the `config.ini` file in your preferred text editor and set the configurati
 
 ```ini
 [files]
-zip_file_path=/Users/pasindu/project/wso2is-7.0.0-beta2-SNAPSHOT.zip
-is_folder_name=wso2is-7.0.0-beta2-SNAPSHOT #Usually the zip file name without the extension
-unzip_dir_path=/Users/pasindu/project/is/mysql #The directory where the IS will be unzipped
+zip_file_path=/Users/pasindu/project/wso2is-7.0.0-rc1-SNAPSHOT.zip
+unzip_dir_path=/Users/pasindu/project/is/mssql
+is_folder_name= #Zip file name without the extension is taken by default.
 
-# mysql, mssql, oracle, or postgresql
 [database]
-type=mysql # mysql, mssql, oracle, or postgresql
-username=wso2user
-password=wso2password
+type=mssql # mysql, postgresql, or mssql
+password=myStrongPaas42!emc2
 identity_db_name=WSO2_IDENTITY_DB
 shared_db_name=WSO2_SHARED_DB
 enable_pooling=false
 
 [server]
-run_is=true
+run_is=false
 run_in_debug=false
 ```
 
