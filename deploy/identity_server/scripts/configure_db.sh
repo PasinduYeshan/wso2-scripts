@@ -1,8 +1,11 @@
+setup_mssql_js_script="scripts/setup_mssql_db.js"
 MYSQL_IMAGE="mysql:latest"
 POSTGRESQL_IMAGE="postgres"
+IS_ARM64=false
 
 MSSQL_IMAGE="mcr.microsoft.com/mssql/server:2019-latest"
 if [[ $(uname -m) == 'arm64' ]]; then
+    IS_ARM64=true
     MSSQL_IMAGE="mcr.microsoft.com/azure-sql-edge"
 fi
 
@@ -93,10 +96,6 @@ configure_mysql_database() {
     echo "Configuring MySQL database."
     sleep 10
 
-    # Creating user and granting permissions.
-    docker exec -i $container_name mysql -u root -p$DB_PASSWORD -e "CREATE USER IF NOT EXISTS '$DB_USERNAME'@'%' \
-    IDENTIFIED BY '$DB_PASSWORD'; GRANT ALL PRIVILEGES ON *.* TO '$DB_USERNAME'@'%'; FLUSH PRIVILEGES;"
-
     docker exec -i $container_name mysql -u $DB_USERNAME -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $IDENTITY_DB_NAME; \
     CREATE DATABASE $IDENTITY_DB_NAME CHARACTER SET latin1;"
 
@@ -161,6 +160,16 @@ configure_mssql_database() {
     $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
 }
 
+configure_mssql_database_arm64() {
+    echo "Configuring MSSQL database."
+    sleep 10
+
+    echo "Running on ARM64, setting up databases using Node.js script"
+    npm install tedious@14.7.0 --save &&
+    npm i async --save &&
+    node $setup_mssql_js_script "$DB_SCRIPTS_DIR" "$DB_PASSWORD" "$IDENTITY_DB_NAME" "$SHARED_DB_NAME" "$db_port"
+}
+
 configure_database() {
     checkpoint "Configuring databases"
     setup_container
@@ -172,7 +181,11 @@ configure_database() {
             configure_postgresql_database
             ;;
         $MSSQL)
-            configure_mssql_database
+            if $IS_ARM64; then
+                configure_mssql_database_arm64
+            else
+                configure_mssql_database
+            fi
             ;;
         $ORACLE)
             ;;

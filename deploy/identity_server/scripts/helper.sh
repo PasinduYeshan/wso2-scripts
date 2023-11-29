@@ -23,6 +23,17 @@ check_prerequisites() {
         echo "Error: Docker is not installed or not running."
         exit 1
     fi
+
+    # Check if npm and node are installed.
+    if ! command -v npm >/dev/null 2>&1; then
+        echo "Error: npm is not installed or not found in PATH."
+        exit 1
+    fi
+
+    if ! command -v node >/dev/null 2>&1; then
+        echo "Error: node is not installed or not found in PATH."
+        exit 1
+    fi
 }
 
 # Function to get configuration value by section and key

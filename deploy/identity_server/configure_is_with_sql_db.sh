@@ -170,7 +170,7 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-configure_environment
+# configure_environment
 configure_database
 print_db_info
 run_is
