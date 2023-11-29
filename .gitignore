@@ -2,4 +2,9 @@
 *.zip
 
 deploy/mysql_is/patches/*
-*/wso2is*/*
+*wso2is*
+
+.env
+
+deploy/identity_server/patches/*
+deploy/identity_server/process_info.log

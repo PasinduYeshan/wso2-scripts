@@ -1,7 +1,7 @@
 #!/bin/bash
 
-TOKEN="7b23f9d6-4ce1-37a1-846b-163a98c915f3"
-ORG_NAME="yeshantest"
+TOKEN=""
+ORG_NAME=""
 
 DELETION_TOKEN=$TOKEN
 BASE_URL="https://dev.api.asgardeo.io/t/$ORG_NAME"
