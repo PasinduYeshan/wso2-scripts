@@ -1,4 +1,4 @@
 # WSO2 Scripts
 
 ## Deployment
-- Deploy IS with MySQL [Docs](deploy/mysql_is/README.md)
+- Deploy IS with SQL Databases [Docs](deploy/identity_server/README.md)

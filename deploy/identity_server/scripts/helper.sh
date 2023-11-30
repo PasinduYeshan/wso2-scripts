@@ -23,8 +23,11 @@ check_prerequisites() {
         echo "Error: Docker is not installed or not running."
         exit 1
     fi
+}
 
-    # Check if npm and node are installed.
+# Check if npm and node are installed.
+check_if_node_npm_installed() {
+     
     if ! command -v npm >/dev/null 2>&1; then
         echo "Error: npm is not installed or not found in PATH."
         exit 1

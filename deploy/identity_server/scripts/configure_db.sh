@@ -2,38 +2,33 @@ setup_mssql_js_script="scripts/setup_mssql_db.js"
 MYSQL_IMAGE="mysql:latest"
 POSTGRESQL_IMAGE="postgres"
 IS_ARM64=false
-
 MSSQL_IMAGE="mcr.microsoft.com/mssql/server:2019-latest"
+
+# Detect ARM64 architecture.
 if [[ $(uname -m) == 'arm64' ]]; then
     IS_ARM64=true
     MSSQL_IMAGE="mcr.microsoft.com/azure-sql-edge"
 fi
 
-# Check if the database is already running on the port.
+# Checks if a port is in use.
 is_port_in_use() {
-    if lsof -i:$db_port > /dev/null; then
-        return 0  # port is in use
-    else
-        return 1  # port is not in use
-    fi
+    lsof -i:$db_port > /dev/null
 }
 
+# Exits if port is in use by another process.
 exit_if_port_in_use() {
     if is_port_in_use; then
-        # Check if the expected container is the one using the port
-        if [ "$(docker inspect -f '{{.State.Running}}' "$container_name")" = "true" ]; then
-            echo "Notice: The port $db_port is already in use by the container '$container_name'."
-        else
+        if [ "$(docker inspect -f '{{.State.Running}}' "$container_name")" != "true" ]; then
             echo "Error: Port $db_port is already in use by a different process. Please close the existing process."
             exit 1
         fi
+        echo "Notice: The port $db_port is already in use by the container '$container_name'."
     fi
 }
 
-# Function to wait until a Docker container is ready.
+# Waits for a Docker container to be ready
 wait_for_container_ready() {
-    # Check if the container exists first.
-    if ! docker inspect "$container_name" > /dev/null 2>&1; then
+    if ! docker inspect "$container_name" &> /dev/null; then
         echo "Error: Container $container_name does not exist."
         return 1
     fi
@@ -45,50 +40,59 @@ wait_for_container_ready() {
     echo "$container_name is ready."
 }
 
-# Create a Docker container for the database.
+# Creates a Docker container for the specified database
 create_docker_container() {
     case $DB_TYPE in
         $MYSQL)
-            docker pull $MYSQL_IMAGE &&
+            docker pull $MYSQL_IMAGE
             docker run --name "$container_name" -p 3306:3306 -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD -d $MYSQL_IMAGE
             ;;
         $POSTGRESQL)
-            docker pull $POSTGRESQL_IMAGE &&
+            docker pull $POSTGRESQL_IMAGE
             docker run -d -p 5432:5432 --name "$container_name" -e POSTGRES_PASSWORD=$DB_PASSWORD $POSTGRESQL_IMAGE
             ;;
         $MSSQL)
-            docker pull $MSSQL_IMAGE &&
-            docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d \
-            $MSSQL_IMAGE
+            docker pull $MSSQL_IMAGE
+            docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d $MSSQL_IMAGE
             ;;
         $ORACLE)
-            # Not implemented
+            echo "Oracle database setup not implemented."
             ;;
     esac
 }
 
-# Function to check if a Docker container exists and start it if it doesn't.
-check_and_start_container() {
-    existing_container=$(docker ps -aq -f name="$container_name")
-    
-    if [ -n "$existing_container" ]; then
+# Function to check if a Docker container exists.
+container_exists() {
+    docker ps -aq -f name="$1" | grep -q .
+}
+
+# Function to forcibly recreate a container if needed.
+recreate_container_if_needed() {
+    if $FORCE_CONTAINER_RECREATION && container_exists "$container_name"; then
+        echo "Forcefully removing existing container: $container_name"
+        docker rm -f "$container_name" > /dev/null 2>&1
+    fi
+}
+
+# Function to start or create a container.
+start_or_create_container() {
+    if container_exists "$container_name"; then
         if [ "$(docker inspect -f '{{.State.Running}}' "$container_name")" = "false" ]; then
-            exit_if_port_in_use
             echo "Starting existing Docker container: $container_name"
             docker start "$container_name"
         else
             echo "Container $container_name is already running."
         fi
     else
-        exit_if_port_in_use
         echo "Creating new Docker container for $container_name. This may take a few minutes."
         create_docker_container
-        echo "Docker container $container_name created."
     fi
 }
 
+# Main setup function for container.
 setup_container() {
-    check_and_start_container
+    recreate_container_if_needed
+    start_or_create_container
     wait_for_container_ready
 }
 
@@ -182,6 +186,7 @@ configure_database() {
             ;;
         $MSSQL)
             if $IS_ARM64; then
+                check_if_node_npm_installed
                 configure_mssql_database_arm64
             else
                 configure_mssql_database
