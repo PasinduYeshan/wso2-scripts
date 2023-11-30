@@ -20,6 +20,7 @@ DB_TYPE=$(get_config_value "database" "type")
 IDENTITY_DB_NAME=$(get_config_value "database" "identity_db_name")
 SHARED_DB_NAME=$(get_config_value "database" "shared_db_name")
 ENABLE_DB_POOLING_OPTION=$(get_config_value "database" "enable_pooling")
+FORCE_CONTAINER_RECREATION=$(get_config_value "database" "force_container_recreation")
 
 RUN_IS=$(get_config_value "server" "run_is")
 RUN_IS_IN_DEBUG_MODE=$(get_config_value "server" "run_in_debug")
@@ -99,7 +100,6 @@ check_prerequisites
 # ---------------------------------------------------------------------------- #
 #                                Configuring IS                                #
 # ---------------------------------------------------------------------------- #
-
 copy_jdbc_drivers() {
     case $DB_TYPE in
         $MYSQL)
@@ -154,13 +154,12 @@ source scripts/configure_db.sh
 run_is() {
     if [ "$RUN_IS" = "true" ]; then
         checkpoint "Running WSO2 IS"
-        # Check if RUN_IS_IN_DEBUG_MODE is set to true
         if [ "$RUN_IS_IN_DEBUG_MODE" = "true" ]; then
             echo "Running WSO2 IS in debug mode."
-            sh "$UNZIP_DIR_PATH/bin/wso2server.sh" -debug 5005
+            sh "$UNZIPED_IS_PATH/bin/wso2server.sh" -debug 5005
         else
             echo "Running WSO2 IS in normal mode."
-            sh "$UNZIP_DIR_PATH/bin/wso2server.sh"
+            sh "$UNZIPED_IS_PATH/bin/wso2server.sh"
         fi
     else
         echo "WSO2 IS is configured."
@@ -170,7 +169,7 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-# configure_environment
+configure_environment
 configure_database
 print_db_info
 run_is
