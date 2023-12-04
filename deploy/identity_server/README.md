@@ -63,25 +63,25 @@ The config.ini file contains essential configurations for running the WSO2 Ident
 #### [files] Section
 This section defines the file paths related to the WSO2 Identity Server (IS) ZIP file and its extraction location.
 
-- zip_file_path: The full file path to the WSO2 IS ZIP file.
-- unzip_dir_path: The directory where the IS ZIP file will be extracted. If left blank, the script uses a default directory based on the ZIP file name.
-- is_folder_name: The name of the folder where IS will be unzipped. If left blank, the script assumes the folder name to be the ZIP file's name without the extension.
+- `zip_file_path`: The full file path to the WSO2 IS ZIP file.
+- `unzip_dir_path`: The directory where the IS ZIP file will be extracted. If left blank, the script uses a default directory based on the ZIP file name.
+- `is_folder_name`: The name of the folder where IS will be unzipped. If left blank, the script assumes the folder name to be the ZIP file's name without the extension.
 
 #### [database] Section
 This section configures the database settings for the WSO2 IS.
 
-- type: Specifies the type of database to be used. Possible values are mysql, postgresql, and mssql.
+- `type`: Specifies the type of database to be used. Possible values are mysql, postgresql, and mssql.
 bash
-- identity_db_name: The name of the identity database to be created.
-- shared_db_name: The name of the shared database to be created.
-- enable_pooling: Enables or disables database connection pooling.
-- force_container_recreation: If set to true, existing Docker containers with the same name will be forcefully removed and recreated.
+- `identity_db_name`: The name of the identity database to be created.
+- `shared_db_name`: The name of the shared database to be created.
+- `enable_pooling`: Enables or disables database connection pooling.
+- `force_container_recreation`: If set to true, existing Docker containers with the same name will be forcefully removed and recreated.
 
 #### [server] Section
 This section includes configurations related to running the WSO2 IS.
 
-- run_is: Set to true to run the WSO2 Identity Server after configuration.
-- run_in_debug: Enables debug mode if set to true.
+- `run_is`: Set to true to run the WSO2 Identity Server after configuration.
+- `run_in_debug`: Enables debug mode if set to true.
 
 #### Docker Database Containers
 The script sets up Docker containers based on the specified database type (type in the [database] section). Ensure Docker is running on your system before executing the script.
