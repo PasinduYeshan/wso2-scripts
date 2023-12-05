@@ -17,6 +17,7 @@ IS_FOLDER_NAME=$(get_config_value "files" "is_folder_name")
 UNZIP_DIR_PATH=$(get_config_value "files" "unzip_dir_path")
 
 DB_TYPE=$(get_config_value "database" "type")
+DB_PASSWORD=$(get_config_value "database" "password")
 IDENTITY_DB_NAME=$(get_config_value "database" "identity_db_name")
 SHARED_DB_NAME=$(get_config_value "database" "shared_db_name")
 ENABLE_DB_POOLING_OPTION=$(get_config_value "database" "enable_pooling")
@@ -50,6 +51,10 @@ else
     echo "UNZIPED_IS_PATH: $UNZIPED_IS_PATH"
 fi
 
+if [ -z "$DB_PASSWORD" ]; then
+    DB_PASSWORD="myStrongPaas42!emc2"
+fi
+
 IS_DEPLOYMENT_FILE="$UNZIPED_IS_PATH/repository/conf/deployment.toml"
 IS_CONNECTOR_DIR="$UNZIPED_IS_PATH/repository/components/lib"
 IS_PATCH_DIR="$UNZIPED_IS_PATH/repository/components/patches/patch9999"
@@ -68,7 +73,6 @@ ORACLE_PORT="1521"
 
 container_name="$MYSQL_CONTAINER_NAME"
 db_port="$MYSQL_PORT"
-DB_PASSWORD="myStrongPaas42!emc2"
 
 case $DB_TYPE in
     $MYSQL)
