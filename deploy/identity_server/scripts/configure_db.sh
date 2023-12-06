@@ -143,9 +143,9 @@ configure_mssql_database() {
     sleep 10
 
     # Create databases.
-    docker exec -i $container_name /opt/mssql/bin/sqlserver -S localhost -U SA -P $DB_PASSWORD -Q \
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
     "CREATE DATABASE $IDENTITY_DB_NAME;"
-    docker exec -i $container_name /opt/mssql/bin/sqlserver -S localhost -U SA -P $DB_PASSWORD -Q \
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
     "CREATE DATABASE $SHARED_DB_NAME;"
 
     # Copy SQL scripts to the container.
@@ -156,11 +156,11 @@ configure_mssql_database() {
     docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
 
     # Execute SQL scripts.
-    docker exec -i $container_name /opt/mssql/bin/sqlserver -S localhost -U SA -P $DB_PASSWORD -d \
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
     $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
-    docker exec -i $container_name /opt/mssql/bin/sqlserver -S localhost -U SA -P $DB_PASSWORD -d \
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
     $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
-    docker exec -i $container_name /opt/mssql/bin/sqlserver -S localhost -U SA -P $DB_PASSWORD -d \
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
     $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
 }
 
