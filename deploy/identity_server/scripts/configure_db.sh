@@ -1,8 +1,10 @@
 setup_mssql_js_script="scripts/setup_mssql_db.js"
+setup_db2_js_script="scripts/setup_db2_db.js"
 MYSQL_IMAGE="mysql:latest"
 POSTGRESQL_IMAGE="postgres"
 IS_ARM64=false
 MSSQL_IMAGE="mcr.microsoft.com/mssql/server:2019-latest"
+DB2_IMAGE="ibmcom/db2"
 
 # Detect ARM64 architecture.
 if [[ $(uname -m) == 'arm64' ]]; then
@@ -55,8 +57,22 @@ create_docker_container() {
             docker pull $MSSQL_IMAGE
             docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d $MSSQL_IMAGE
             ;;
+        
         $ORACLE)
             echo "Oracle database setup not implemented."
+            ;;
+
+        $DB2)
+            docker pull $DB2_IMAGE
+            if $IS_ARM64; then
+                echo "Running on ARM64 architecture."
+                docker run --platform=linux/amd64 -itd --name "$container_name" --privileged=true -p 50000:50000 \
+                -e LICENSE=accept -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$IDENTITY_DB_NAME $DB2_IMAGE
+            else
+                # TODO: Path to db storage needs to be updated.
+                docker run -itd --name "$container_name" --privileged=true -p 50000:50000 -e LICENSE=accept \
+                -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$IDENTITY_DB_NAME -v /path/to/db/storage:/database $DB2_IMAGE
+            fi
             ;;
     esac
 }
@@ -174,6 +190,37 @@ configure_mssql_database_arm64() {
     node $setup_mssql_js_script "$DB_SCRIPTS_DIR" "$DB_PASSWORD" "$IDENTITY_DB_NAME" "$SHARED_DB_NAME" "$db_port"
 }
 
+configure_db2_database() {
+    echo "Configuring DB2 database."
+    sleep 10
+
+    # # Get the container ID of the DB2 container
+    # container_id=$(docker ps -qf "name=$container_name")
+
+    # # Start the DB2 instance inside the container
+    # docker exec -t $container_id bash -c 'db2start'
+
+    # # Sleep to allow DB2 instance to fully start
+    # sleep 5
+
+    # # Convert IDENTITY_DB_NAME to lowercase
+    # IDENTITY_DB_NAME=$(echo "$IDENTITY_DB_NAME" | tr '[:upper:]' '[:lower:]')
+    # SHARED_DB_NAME=$(echo "$SHARED_DB_NAME" | tr '[:upper:]' '[:lower:]')
+
+    # echo "Creating DB2 database $IDENTITY_DB_NAME"
+    # # Create the database
+    # docker exec -t $container_id bash -c "su - db2inst1 -c 'db2 create database $IDENTITY_DB_NAME;'"
+
+    # echo "Creating DB2 database $SHARED_DB_NAME"
+    # # Create the database
+    # docker exec -t $container_id bash -c "su - db2inst1 -c 'db2 create database $SHARED_DB_NAME;'"
+
+    # echo "DB2 database $IDENTITY_DB_NAME configured."
+    npm install tedious@14.7.0 --save &&
+    npm i async --save &&
+    node $setup_db2_js_script "$DB_SCRIPTS_DIR" "$DB_PASSWORD" "$IDENTITY_DB_NAME" "$SHARED_DB_NAME" "$db_port"
+}
+
 configure_database() {
     checkpoint "Configuring databases"
     setup_container
@@ -193,6 +240,9 @@ configure_database() {
             fi
             ;;
         $ORACLE)
+            ;;
+        $DB2)
+            configure_db2_database
             ;;
     esac
 }

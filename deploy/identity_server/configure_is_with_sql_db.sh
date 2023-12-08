@@ -6,6 +6,7 @@ MYSQL="mysql"
 MSSQL="mssql"
 ORACLE="oracle"
 POSTGRESQL="postgresql"
+DB2="db2"
 
 # ---------------------------------------------------------------------------- #
 #                         Reading Configuration Values                         #
@@ -65,11 +66,13 @@ MYSQL_CONTAINER_NAME="mysql$CONTAINER_POSTFIX"
 POSTGRESQL_CONTAINER_NAME="postgresql$CONTAINER_POSTFIX"
 MSSQL_CONTAINER_NAME="mssql$CONTAINER_POSTFIX"
 ORACLE_CONTAINER_NAME="oracle$CONTAINER_POSTFIX"
+DB2_CONTAINER_NAME="db2$CONTAINER_POSTFIX"
 
 MYSQL_PORT="3306"
 POSTGRESQL_PORT="5432"
 MSSQL_PORT="1433"
 ORACLE_PORT="1521"
+DB2_PORT="50000"
 
 container_name="$MYSQL_CONTAINER_NAME"
 db_port="$MYSQL_PORT"
@@ -93,6 +96,12 @@ case $DB_TYPE in
     $ORACLE)
         container_name="$ORACLE_CONTAINER_NAME"
         db_port="$ORACLE_PORT"
+        DB_USERNAME="system"
+        ;;
+    $DB2)
+        container_name="$DB2_CONTAINER_NAME"
+        db_port="$DB2_PORT"
+        DB_USERNAME="db2inst1"
         ;;
 esac
 
@@ -117,6 +126,9 @@ copy_jdbc_drivers() {
             ;;
         $ORACLE)
             # cp $ORACLE_CONNECTOR_PATH $IS_CONNECTOR_DIR
+            # Not implemented
+            ;;
+        $DB2)
             # Not implemented
             ;;
     esac
@@ -173,7 +185,7 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-configure_environment
+# configure_environment
 configure_database
 print_db_info
 run_is

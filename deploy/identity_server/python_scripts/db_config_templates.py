@@ -116,3 +116,89 @@ port = "1433"
 mssql_advanced_config = f"""
 
 """
+
+def get_db2_db_config(identity_db_name, shared_db_name, db_username, db_password):
+    return f"""
+[database.identity_db]
+type = "db2"
+hostname = "localhost"
+name = "{identity_db_name}"
+username = "{db_username}"
+password = "{db_password}"
+port = "50000"
+
+[database.shared_db]
+type = "db2"
+hostname = "localhost"
+name = "{shared_db_name}"
+username = "{db_username}"
+password = "{db_password}"
+port = "50000"
+
+"""
+
+db2_advanced_config = f"""
+[database.identity_db.pool_options]
+maxActive = "80"
+maxWait = "360000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+validationInterval="30000"
+defaultAutoCommit=false
+commitOnReturn=true
+ 
+[database.shared_db.pool_options]
+maxActive = "80"
+maxWait = "360000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+validationInterval="30000"
+defaultAutoCommit=false
+commitOnReturn=true
+
+"""
+
+def get_oracle_db_config(identity_db_name, shared_db_name, db_username, db_password):
+    return f"""
+[database.identity_db]
+type = "oracle"
+hostname = "localhost"
+sid = "{identity_db_name}"
+username = "{db_username}"
+password = "{db_password}"
+port = "1521"
+
+[database.shared_db]
+type = "oracle"
+hostname = "localhost"
+sid = "{shared_db_name}"
+username = "{db_username}"
+password = "{db_password}"
+port = "1521"
+
+"""
+
+oracle_advanced_config = f"""
+[database.identity_db.pool_options]
+maxActive = "80"
+maxWait = "360000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="select 1 from dual"
+validationInterval="30000"
+defaultAutoCommit=false
+commitOnReturn=true
+ 
+[database.shared_db.pool_options]
+maxActive = "80"
+maxWait = "360000"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="select 1 from dual"
+validationInterval="30000"
+defaultAutoCommit=false
+commitOnReturn=true
+
+"""
