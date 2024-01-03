@@ -12,9 +12,19 @@ Before proceeding, ensure the following software is installed on your system:
 - **Node.js** and npm: Essential for MSSQL database configuration, especially on ARM64 architectures.
 - A text editor (like Vim, Nano, or VS Code) for editing configuration files.
 
+## Supported Database Types
+The script supports the following database types:
+
+- MySQL: A popular open-source relational database.
+- PostgreSQL: An advanced open-source relational database.
+- MSSQL: Microsoft SQL Server, a relational database management system.
+- DB2: IBM's DB2 Database. Note: Support for DB2 is limited to the amd64 architecture only.
+
+Make sure to specify the correct database type in the config.ini file under the `[database]` section.
+
 ## Port Availability Check
 
-Before running the script, ensure the following ports are not being used by other services:
+Before running the script, ensure the required ports are not being used by other services:
 
 - **9443** - WSO2 IS
 - **3306** - MySQL
@@ -45,7 +55,7 @@ unzip_dir_path=/Users/pasindu/project/is/mssql
 is_folder_name= #Zip file name without the extension is taken by default.
 
 [database]
-type=mssql # mysql, postgresql, or mssql
+type=mssql # mysql, postgresql, mssql, or db2
 password=myStrongPaas42!emc2
 identity_db_name=WSO2_IDENTITY_DB
 shared_db_name=WSO2_SHARED_DB
