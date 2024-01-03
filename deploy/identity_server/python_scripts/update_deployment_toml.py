@@ -1,7 +1,10 @@
 import sys
-from db_config_templates import (get_mysql_db_config, mysql_advanced_config, 
-                                 get_postgresql_db_config, postgresql_advanced_config, 
-                                 get_mssql_db_config, mssql_advanced_config)
+from db_config_templates import (
+    get_mysql_db_config, mysql_advanced_config, 
+    get_postgresql_db_config, postgresql_advanced_config, 
+    get_mssql_db_config, mssql_advanced_config,
+    get_db2_db_config, db2_advanced_config,
+    get_oracle_db_config, oracle_advanced_config )
 
 # Check if all necessary arguments are provided.
 if len(sys.argv) < 8:
@@ -26,6 +29,12 @@ elif db_type == 'mysql':
 elif db_type == 'mssql':
     db_config = get_mssql_db_config(identity_db_name, shared_db_name, db_username, db_password)
     db_advanced_config = mssql_advanced_config
+elif db_type == 'db2':
+    db_config = get_db2_db_config(identity_db_name, shared_db_name, db_username, db_password)
+    db_advanced_config = db2_advanced_config
+elif db_type == 'oracle':
+    db_config = get_oracle_db_config(identity_db_name, shared_db_name, db_username, db_password)
+    db_advanced_config = oracle_advanced_config
 else:
     print(f"Unsupported database type: {db_type}")
     sys.exit(1)

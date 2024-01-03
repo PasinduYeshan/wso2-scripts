@@ -6,6 +6,7 @@ MYSQL="mysql"
 MSSQL="mssql"
 ORACLE="oracle"
 POSTGRESQL="postgresql"
+DB2="db2"
 
 # ---------------------------------------------------------------------------- #
 #                         Reading Configuration Values                         #
@@ -33,6 +34,7 @@ MYSQL_CONNECTOR_PATH="drivers/mysql-connector-java-8.0.30.jar"
 POSTGRESQL_CONNECTOR_PATH="drivers/postgresql-42.7.0.jar"
 MSSQL_CONNECTOR_PATH="drivers/mssql-jdbc-7.0.0.jre8.jar"
 ORACLE_CONNECTOR_PATH=""
+DB2_CONNECTOR_PATH="drivers/db2jcc4.jar"
 
 PATCHES_FOLDER_PATH="patches"
 
@@ -65,11 +67,13 @@ MYSQL_CONTAINER_NAME="mysql$CONTAINER_POSTFIX"
 POSTGRESQL_CONTAINER_NAME="postgresql$CONTAINER_POSTFIX"
 MSSQL_CONTAINER_NAME="mssql$CONTAINER_POSTFIX"
 ORACLE_CONTAINER_NAME="oracle$CONTAINER_POSTFIX"
+DB2_CONTAINER_NAME="db2$CONTAINER_POSTFIX"
 
 MYSQL_PORT="3306"
 POSTGRESQL_PORT="5432"
 MSSQL_PORT="1433"
 ORACLE_PORT="1521"
+DB2_PORT="50000"
 
 container_name="$MYSQL_CONTAINER_NAME"
 db_port="$MYSQL_PORT"
@@ -93,8 +97,36 @@ case $DB_TYPE in
     $ORACLE)
         container_name="$ORACLE_CONTAINER_NAME"
         db_port="$ORACLE_PORT"
+        DB_USERNAME="system"
+        ;;
+    $DB2)
+        container_name="$DB2_CONTAINER_NAME"
+        db_port="$DB2_PORT"
+        DB_USERNAME="db2inst1"
         ;;
 esac
+
+# If database type is db2, database names should only have characters 1-8
+if [ "$DB_TYPE" = "$DB2" ]; then
+    # Check if the identity database name is valid
+    if [[ $IDENTITY_DB_NAME =~ ^[a-zA-Z0-9_]{1,8}$ ]]; then
+        echo "Identity database name is valid."
+    else
+        echo "Identity database name is invalid. It should only have 1-8 characters."
+        IDENTITY_DB_NAME="WSO2ISID"
+        echo "Setting default identity database name: $IDENTITY_DB_NAME"
+    fi
+
+    # Check if the shared database name is valid
+    if [[ $SHARED_DB_NAME =~ ^[a-zA-Z0-9_]{1,8}$ ]]; then
+        echo "Shared database name is valid."
+    else
+        echo "Shared database name is invalid. It should only have 1-8 characters."
+        SHARED_DB_NAME="WSO2ISSD"
+        echo "Setting default shared database name: $SHARED_DB_NAME"
+    fi
+fi
+
 
 # ---------------------------------------------------------------------------- #
 #                                Pre-requisites                                #
@@ -118,6 +150,9 @@ copy_jdbc_drivers() {
         $ORACLE)
             # cp $ORACLE_CONNECTOR_PATH $IS_CONNECTOR_DIR
             # Not implemented
+            ;;
+        $DB2)
+            cp $DB2_CONNECTOR_PATH $IS_CONNECTOR_DIR
             ;;
     esac
 }

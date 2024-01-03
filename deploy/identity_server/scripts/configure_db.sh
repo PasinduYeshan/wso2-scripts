@@ -3,11 +3,14 @@ MYSQL_IMAGE="mysql:latest"
 POSTGRESQL_IMAGE="postgres"
 IS_ARM64=false
 MSSQL_IMAGE="mcr.microsoft.com/mssql/server:2019-latest"
+DB2_IMAGE="ibmcom/db2"
+DB2_DB="TEST"
 
 # Detect ARM64 architecture.
 if [[ $(uname -m) == 'arm64' ]]; then
     IS_ARM64=true
     MSSQL_IMAGE="mcr.microsoft.com/azure-sql-edge"
+    DB2_IMAGE="ibmcom/db2-amd64"
 fi
 
 # Checks if a port is in use.
@@ -55,8 +58,22 @@ create_docker_container() {
             docker pull $MSSQL_IMAGE
             docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d $MSSQL_IMAGE
             ;;
+        
         $ORACLE)
             echo "Oracle database setup not implemented."
+            ;;
+
+        $DB2)
+            docker pull $DB2_IMAGE
+            if $IS_ARM64; then
+                echo "Running on ARM64 architecture."
+                docker run --platform=linux/amd64 -itd --name "$container_name" --privileged=true -p 50000:50000 \
+                -e LICENSE=accept -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$DB2_DB $DB2_IMAGE
+            else
+                # TODO: Path to db storage needs to be updated for linux.
+                docker run -itd --name "$container_name" --privileged=true -p 50000:50000 -e LICENSE=accept \
+                -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$DB2_DB -v /path/to/db/storage:/database $DB2_IMAGE
+            fi
             ;;
     esac
 }
@@ -174,6 +191,69 @@ configure_mssql_database_arm64() {
     node $setup_mssql_js_script "$DB_SCRIPTS_DIR" "$DB_PASSWORD" "$IDENTITY_DB_NAME" "$SHARED_DB_NAME" "$db_port"
 }
 
+configure_db2_database() {
+    echo "Configuring DB2 database."
+    sleep 10
+
+    # Function to check if DB2 is ready
+    check_db2_ready() {
+        docker exec -t $container_name su - db2inst1 -c "db2 connect to $1" &> /dev/null
+        return $?
+    }
+
+    # Wait for DB2 to be ready with timeout (up to 10 minutes)
+    echo "Waiting for DB2 to be ready. This may take up to few minutes"
+    start_time=$(date +%s)
+    timeout=$((10 * 60))
+
+    # For the first time wait for 5 minutes
+    if ! check_db2_ready $DB2_DB; then
+        echo "DB2 is not ready yet. Waiting for 5 minutes..."
+        sleep 300
+    fi
+    
+    while true; do
+        current_time=$(date +%s)
+        if check_db2_ready $DB2_DB; then
+            echo "DB2 is ready."
+            break
+        fi
+        if (( current_time - start_time > timeout )); then
+            echo "Timeout reached while waiting for DB2 to start."
+            exit 1
+        fi
+        echo "Still waiting for DB2 to start..."
+        sleep 30
+    done
+
+    # Create or recreate the databases
+    docker exec -t $container_name su - db2inst1 -c "db2 force applications all;"
+    sleep 60 # Wait for 1 minute to make sure all the applications are closed
+    for db_name in "$IDENTITY_DB_NAME" "$SHARED_DB_NAME"; do
+        echo "Dropping and recreating database $db_name"
+        docker exec -t $container_name su - db2inst1 -c "db2 drop db $db_name" || true  # Ignore if the database doesn't exist
+        docker exec -t $container_name su - db2inst1 -c "db2 create database $db_name;"
+    done
+
+    # Copy DB2 SQL scripts to the container
+    docker exec $container_name mkdir -p /tmp/dbscripts/identity
+    docker exec $container_name mkdir -p /tmp/dbscripts/consent
+    docker cp "$DB_SCRIPTS_DIR/identity/db2.sql" "$container_name:/tmp/dbscripts/identity/db2.sql"
+    docker cp "$DB_SCRIPTS_DIR/consent/db2.sql" "$container_name:/tmp/dbscripts/consent/db2.sql"
+    docker cp "$DB_SCRIPTS_DIR/db2.sql" "$container_name:/tmp/dbscripts/db2.sql"
+
+    # Execute DB2 SQL scripts in the Identity database
+    echo "Executing identity scripts in DB2 database $IDENTITY_DB_NAME"
+    docker exec -t $container_name su - db2inst1 -c "db2 connect to $IDENTITY_DB_NAME user $DB_USERNAME using \
+    $DB_PASSWORD; db2 -td/ -f /tmp/dbscripts/identity/db2.sql -z identity_db2_exec.log; db2 -td/ -f \
+    /tmp/dbscripts/consent/db2.sql -z identity_db2_exec.log"
+
+    # Execute DB2 SQL script in the Shared database
+    echo "Executing shared script in DB2 database $SHARED_DB_NAME"; 
+    docker exec -t $container_name su - db2inst1 -c "db2 connect to $SHARED_DB_NAME user $DB_USERNAME using \
+    $DB_PASSWORD; db2 -td/ -f /tmp/dbscripts/db2.sql -z shared_db2_exec.log"
+}
+
 configure_database() {
     checkpoint "Configuring databases"
     setup_container
@@ -193,6 +273,9 @@ configure_database() {
             fi
             ;;
         $ORACLE)
+            ;;
+        $DB2)
+            configure_db2_database
             ;;
     esac
 }
