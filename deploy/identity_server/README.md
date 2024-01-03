@@ -31,6 +31,7 @@ Before running the script, ensure the required ports are not being used by other
 - **1433** - MSSQL
 - **1521** - Oracle
 - **5432** - PostgreSQL
+- **50000** - DB2
 
 To check and free up these ports, use:
 
