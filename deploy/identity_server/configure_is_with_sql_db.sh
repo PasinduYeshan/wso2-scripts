@@ -34,6 +34,7 @@ MYSQL_CONNECTOR_PATH="drivers/mysql-connector-java-8.0.30.jar"
 POSTGRESQL_CONNECTOR_PATH="drivers/postgresql-42.7.0.jar"
 MSSQL_CONNECTOR_PATH="drivers/mssql-jdbc-7.0.0.jre8.jar"
 ORACLE_CONNECTOR_PATH=""
+DB2_CONNECTOR_PATH="drivers/db2jcc4.jar"
 
 PATCHES_FOLDER_PATH="patches"
 
@@ -105,6 +106,28 @@ case $DB_TYPE in
         ;;
 esac
 
+# If database type is db2, database names should only have characters 1-8
+if [ "$DB_TYPE" = "$DB2" ]; then
+    # Check if the identity database name is valid
+    if [[ $IDENTITY_DB_NAME =~ ^[a-zA-Z0-9_]{1,8}$ ]]; then
+        echo "Identity database name is valid."
+    else
+        echo "Identity database name is invalid. It should only have 1-8 characters."
+        IDENTITY_DB_NAME="WSO2ISID"
+        echo "Setting default identity database name: $IDENTITY_DB_NAME"
+    fi
+
+    # Check if the shared database name is valid
+    if [[ $SHARED_DB_NAME =~ ^[a-zA-Z0-9_]{1,8}$ ]]; then
+        echo "Shared database name is valid."
+    else
+        echo "Shared database name is invalid. It should only have 1-8 characters."
+        SHARED_DB_NAME="WSO2ISSD"
+        echo "Setting default shared database name: $SHARED_DB_NAME"
+    fi
+fi
+
+
 # ---------------------------------------------------------------------------- #
 #                                Pre-requisites                                #
 # ---------------------------------------------------------------------------- #
@@ -129,7 +152,7 @@ copy_jdbc_drivers() {
             # Not implemented
             ;;
         $DB2)
-            # Not implemented
+            cp $DB2_CONNECTOR_PATH $IS_CONNECTOR_DIR
             ;;
     esac
 }
@@ -185,7 +208,7 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-# configure_environment
+configure_environment
 configure_database
 print_db_info
 run_is
