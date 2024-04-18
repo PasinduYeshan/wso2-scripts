@@ -1,9 +1,11 @@
 export BASE_URL=https://localhost:9443
 export CALL_BACK_URL=http://localhost:3000
-export CLIENT_ID=fUvmkRmHzNOnpuZ1PGsVgHVfjmoa
-export CLIENT_SECRET=kkZtICd2wNcElVmnAS2ydZzFa0ca
+export CLIENT_ID=
+export CLIENT_SECRET=
 export GRANT_TYPE=authorization_code
 export SCOPE=openid+profile+email+SYSTEM
+export AUTH_ENDPOINT=$BASE_URL/oauth2/authorize
+export TOKEN_ENDPOINT=$BASE_URL/oauth2/token
 
 echo "$AUTH_ENDPOINT?scope=$SCOPE&response_type=code&redirect_uri=$CALL_BACK_URL&client_id=$CLIENT_ID"
 
