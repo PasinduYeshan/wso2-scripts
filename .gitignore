@@ -13,3 +13,12 @@ deploy/identity_server/process_info.log
 
 # Exclude python virtual environment
 *myenv/
+
+local/
+
+*__pycache__/
+
+*.DS_Store
+
+logs/processed_error_logs.txt
+
