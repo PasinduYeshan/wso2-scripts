@@ -6,16 +6,24 @@ check_prerequisites() {
         exit 1
     fi
 
-    # Check if zip is installed
-    if ! command -v unzip >/dev/null 2>&1; then
-        echo "Error: zip is not installed or not found in PATH."
-        exit 1
-    fi
+    if [ "$IS_ALREADY_UNZIPPED" != "true" ]; then
+        # Check if zip is installed
+        if ! command -v unzip >/dev/null 2>&1; then
+            echo "Error: zip is not installed or not found in PATH."
+            exit 1
+        fi
 
-    # Check if the ZIP file exists
-    if [ ! -f "$ZIP_FILE_PATH" ]; then
-        echo "Error: $ZIP_FILE_PATH not found."
-        exit 1
+        # Check if the ZIP file exists
+        if [ ! -f "$ZIP_FILE_PATH" ]; then
+            echo "Error: $ZIP_FILE_PATH not found."
+            exit 1
+        fi
+    else
+        # Check if the unzipped folder exists
+        if [ ! -d "$UNZIPPED_IS_PATH" ]; then
+            echo "Error: The folder '$UNZIPPED_IS_PATH' does not exist."
+            exit 1
+        fi
     fi
 
     # Check if docker is working.
@@ -27,7 +35,6 @@ check_prerequisites() {
 
 # Check if npm and node are installed.
 check_if_node_npm_installed() {
-     
     if ! command -v npm >/dev/null 2>&1; then
         echo "Error: npm is not installed or not found in PATH."
         exit 1

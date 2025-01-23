@@ -74,8 +74,9 @@ The config.ini file contains essential configurations for running the WSO2 Ident
 #### [files] Section
 This section defines the file paths related to the WSO2 Identity Server (IS) ZIP file and its extraction location.
 
+- `is_already_unzipped`: Set to true if the IS ZIP file is already extracted.
 - `zip_file_path`: The full file path to the WSO2 IS ZIP file.
-- `unzip_dir_path`: The directory where the IS ZIP file will be extracted. If left blank, the script uses a default directory based on the ZIP file name.
+- `unzip_dir_path`: The directory where the IS ZIP file will be extracted.
 - `is_folder_name`: The name of the folder where IS will be unzipped. If left blank, the script assumes the folder name to be the ZIP file's name without the extension.
 
 #### [database] Section
@@ -103,7 +104,7 @@ Note: Update the paths, database details, and server settings as needed to match
 
 
 ## Patching the IS
-- Put the patch files in the `patches` directory. 
+- Put the patch files in the `patches` directory.
 They will be copied to the `<IS_DIR>/repository/components/patches/patch9999` directory of the IS.
 
 ## Running the Script
@@ -111,7 +112,7 @@ After configuring the `config.ini` file, save your changes and exit the editor. 
 
 ```bash
 chmod +x configure_is_with_sql_db.sh
-./configure_is_with_sql_db.sh 
+./configure_is_with_sql_db.sh
 ```
 
 ## Output and Logging

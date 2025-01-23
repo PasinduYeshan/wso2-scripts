@@ -13,6 +13,7 @@ DB2="db2"
 # ---------------------------------------------------------------------------- #
 CONFIG_FILE="config.ini"
 
+IS_ALREADY_UNZIPPED=$(get_config_value "files" "is_already_unzipped")
 ZIP_FILE_PATH=$(get_config_value "files" "zip_file_path")
 IS_FOLDER_NAME=$(get_config_value "files" "is_folder_name")
 UNZIP_DIR_PATH=$(get_config_value "files" "unzip_dir_path")
@@ -46,21 +47,21 @@ fi
 
 # If UNZIP_DIR_PATH is not given in the config file, use the IS folder name and create a directory in the current path.
 if [ -z "$UNZIP_DIR_PATH" ]; then
-    UNZIPED_IS_PATH=$IS_FOLDER_NAME
-    echo "UNZIPED_IS_PATH: $UNZIPED_IS_PATH"
+    UNZIPPED_IS_PATH=$IS_FOLDER_NAME
+    echo "UNZIPPED_IS_PATH: $UNZIPPED_IS_PATH"
 else
-    UNZIPED_IS_PATH="$UNZIP_DIR_PATH/$IS_FOLDER_NAME"
-    echo "UNZIPED_IS_PATH: $UNZIPED_IS_PATH"
+    UNZIPPED_IS_PATH="$UNZIP_DIR_PATH/$IS_FOLDER_NAME"
+    echo "UNZIPPED_IS_PATH: $UNZIPPED_IS_PATH"
 fi
 
 if [ -z "$DB_PASSWORD" ]; then
-    DB_PASSWORD="myStrongPaas42!emc2"
+    DB_PASSWORD="myStrongPaas42emc2"
 fi
 
-IS_DEPLOYMENT_FILE="$UNZIPED_IS_PATH/repository/conf/deployment.toml"
-IS_CONNECTOR_DIR="$UNZIPED_IS_PATH/repository/components/lib"
-IS_PATCH_DIR="$UNZIPED_IS_PATH/repository/components/patches/patch9999"
-DB_SCRIPTS_DIR="$UNZIPED_IS_PATH/dbscripts"
+IS_DEPLOYMENT_FILE="$UNZIPPED_IS_PATH/repository/conf/deployment.toml"
+IS_CONNECTOR_DIR="$UNZIPPED_IS_PATH/repository/components/lib"
+IS_PATCH_DIR="$UNZIPPED_IS_PATH/repository/components/patches/patch9999"
+DB_SCRIPTS_DIR="$UNZIPPED_IS_PATH/dbscripts"
 
 CONTAINER_POSTFIX="_db_is_200"
 MYSQL_CONTAINER_NAME="mysql$CONTAINER_POSTFIX"
@@ -172,14 +173,15 @@ copy_patch_files() {
     fi
 }
 
-configure_environment() {
-    checkpoint "Configuring WSO2 IS"
-    rm -rf $UNZIPED_IS_PATH
-    mkdir -p $UNZIP_DIR_PATH
-    unzip $ZIP_FILE_PATH -d $UNZIP_DIR_PATH
-    copy_jdbc_drivers
-    update_deployment_toml
-    copy_patch_files
+remove_existing_dir_and_unzip() {
+    if [ "$IS_ALREADY_UNZIPPED" = "true" ]; then
+        echo "Skipping unzip. Using existing folder: $UNZIPPED_IS_PATH"
+    else
+        echo "Unzipping WSO2 IS from $ZIP_FILE_PATH to $UNZIP_DIR_PATH..."
+        rm -rf "$UNZIPPED_IS_PATH"
+        mkdir -p "$UNZIP_DIR_PATH"
+        unzip -q "$ZIP_FILE_PATH" -d "$UNZIP_DIR_PATH"
+    fi
 }
 
 # ---------------------------------------------------------------------------- #
@@ -195,10 +197,10 @@ run_is() {
         checkpoint "Running WSO2 IS"
         if [ "$RUN_IS_IN_DEBUG_MODE" = "true" ]; then
             echo "Running WSO2 IS in debug mode."
-            sh "$UNZIPED_IS_PATH/bin/wso2server.sh" -debug 5005
+            sh "$UNZIPPED_IS_PATH/bin/wso2server.sh" -debug 5005
         else
             echo "Running WSO2 IS in normal mode."
-            sh "$UNZIPED_IS_PATH/bin/wso2server.sh"
+            sh "$UNZIPPED_IS_PATH/bin/wso2server.sh"
         fi
     else
         echo "WSO2 IS is configured."
@@ -208,7 +210,10 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-configure_environment
+remove_existing_dir_and_unzip
+copy_jdbc_drivers
+update_deployment_toml
+copy_patch_files
 configure_database
 print_db_info
 run_is

@@ -58,7 +58,6 @@ create_docker_container() {
             docker pull $MSSQL_IMAGE
             docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d $MSSQL_IMAGE
             ;;
-        
         $ORACLE)
             echo "Oracle database setup not implemented."
             ;;
@@ -115,7 +114,7 @@ setup_container() {
 
 configure_mysql_database() {
     echo "Configuring MySQL database."
-    sleep 10
+    sleep 20
 
     docker exec -i $container_name mysql -u $DB_USERNAME -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $IDENTITY_DB_NAME; \
     CREATE DATABASE $IDENTITY_DB_NAME CHARACTER SET latin1;"
@@ -134,7 +133,7 @@ configure_mysql_database() {
 
 configure_postgresql_database() {
     echo "Configuring PostgreSQL database."
-    sleep 10
+    sleep 20
 
     # Create database.
     docker exec -i $container_name psql -U postgres -c "DROP DATABASE IF EXISTS \"$IDENTITY_DB_NAME\";"
@@ -157,7 +156,7 @@ configure_postgresql_database() {
 
 configure_mssql_database() {
     echo "Configuring MSSQL database."
-    sleep 10
+    sleep 20
 
     # Create databases.
     docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
@@ -183,7 +182,7 @@ configure_mssql_database() {
 
 configure_mssql_database_arm64() {
     echo "Configuring MSSQL database."
-    sleep 10
+    sleep 20
 
     echo "Running on ARM64, setting up databases using Node.js script"
     npm install tedious@14.7.0 --save &&
@@ -193,7 +192,7 @@ configure_mssql_database_arm64() {
 
 configure_db2_database() {
     echo "Configuring DB2 database."
-    sleep 10
+    sleep 20
 
     # Function to check if DB2 is ready
     check_db2_ready() {
@@ -211,7 +210,7 @@ configure_db2_database() {
         echo "DB2 is not ready yet. Waiting for 5 minutes..."
         sleep 300
     fi
-    
+
     while true; do
         current_time=$(date +%s)
         if check_db2_ready $DB2_DB; then
@@ -282,7 +281,7 @@ configure_database() {
 
 print_db_info() {
     local log_file="process_info.log"
-    
+
     {
         printf "\nDatabase Configuration:\n"
         printf "%-25s %s\n" "Database Type:" "$DB_TYPE"
