@@ -18,6 +18,7 @@ The script supports the following database types:
 - MySQL: A popular open-source relational database.
 - PostgreSQL: An advanced open-source relational database.
 - MSSQL: Microsoft SQL Server, a relational database management system.
+- Oracle: Oracle Database Express Edition (XE), a feature-limited edition of Oracle Database.
 - DB2: IBM's DB2 Database. Note: Support for DB2 is limited to the amd64 architecture only.
 
 Make sure to specify the correct database type in the config.ini file under the `[database]` section.

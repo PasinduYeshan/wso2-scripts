@@ -165,16 +165,16 @@ def get_oracle_db_config(identity_db_name, shared_db_name, db_username, db_passw
 [database.identity_db]
 type = "oracle"
 hostname = "localhost"
-sid = "{identity_db_name}"
-username = "{db_username}"
+sid = "XE"
+username = "{identity_db_name}"
 password = "{db_password}"
 port = "1521"
 
 [database.shared_db]
 type = "oracle"
 hostname = "localhost"
-sid = "{shared_db_name}"
-username = "{db_username}"
+sid = "XE"
+username = "{shared_db_name}"
 password = "{db_password}"
 port = "1521"
 
