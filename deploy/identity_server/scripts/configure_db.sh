@@ -1,4 +1,3 @@
-setup_mssql_js_script="scripts/setup_mssql_db.js"
 MYSQL_IMAGE="mysql:latest"
 POSTGRESQL_IMAGE="postgres"
 IS_ARM64=false
@@ -229,13 +228,53 @@ configure_mssql_database() {
 }
 
 configure_mssql_database_arm64() {
-    echo "Configuring MSSQL database."
-    sleep 20
+    echo "Configuring MSSQL database on ARM64 (Azure SQL Edge)."
+    
+    # Wait for Azure SQL Edge to be ready (takes longer on ARM64)
+    echo "Waiting for Azure SQL Edge to be ready. This may take a few minutes..."
+    sleep 30
+    
+    # Check if MSSQL is ready
+    start_time=$(date +%s)
+    timeout=$((5 * 60))  # 5 minutes timeout
+    
+    while true; do
+        if docker exec $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q "SELECT 1" &> /dev/null; then
+            echo "Azure SQL Edge is ready."
+            break
+        fi
+        
+        current_time=$(date +%s)
+        if (( current_time - start_time > timeout )); then
+            echo "Timeout reached while waiting for Azure SQL Edge to start."
+            echo "Check container logs with: docker logs $container_name"
+            exit 1
+        fi
+        
+        echo "Still waiting for Azure SQL Edge to start..."
+        sleep 15
+    done
 
-    echo "Running on ARM64, setting up databases using Node.js script"
-    npm install tedious@14.7.0 --save &&
-    npm i async --save &&
-    node $setup_mssql_js_script "$DB_SCRIPTS_DIR" "$DB_PASSWORD" "$IDENTITY_DB_NAME" "$SHARED_DB_NAME" "$db_port"
+    # Create databases.
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
+    "CREATE DATABASE $IDENTITY_DB_NAME;"
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
+    "CREATE DATABASE $SHARED_DB_NAME;"
+
+    # Copy SQL scripts to the container.
+    docker exec $container_name mkdir -p /tmp/dbscripts/identity
+    docker exec $container_name mkdir -p /tmp/dbscripts/consent
+    docker cp "$DB_SCRIPTS_DIR/identity/mssql.sql" "$container_name:/tmp/dbscripts/identity/mssql.sql"
+    docker cp "$DB_SCRIPTS_DIR/consent/mssql.sql" "$container_name:/tmp/dbscripts/consent/mssql.sql"
+    docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
+
+    # Execute SQL scripts.
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
+    $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
+    $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
+    $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
 }
 
 configure_oracle_database() {
@@ -389,7 +428,6 @@ configure_database() {
             ;;
         $MSSQL)
             if $IS_ARM64; then
-                check_if_node_npm_installed
                 configure_mssql_database_arm64
             else
                 configure_mssql_database

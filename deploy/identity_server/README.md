@@ -7,9 +7,9 @@ This README outlines the steps to run the WSO2 Identity Server (IS) with various
 Before proceeding, ensure the following software is installed on your system:
 
 - **Docker**: Required for running database instances in containers.
-- **Python 3**: Necessary for some scripting operations.
+  - **For Oracle on ARM64 (Apple Silicon)**: Use Colima instead of Docker Desktop for better compatibility
+- **Python 3**: Necessary for configuration scripting operations.
 - **Unzip**: Needed to extract the WSO2 IS ZIP file.
-- **Node.js** and npm: Essential for MSSQL database configuration, especially on ARM64 architectures.
 - A text editor (like Vim, Nano, or VS Code) for editing configuration files.
 
 ## Supported Database Types
