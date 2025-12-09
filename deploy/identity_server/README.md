@@ -7,6 +7,17 @@ This README outlines the steps to run the WSO2 Identity Server (IS) with various
 Before proceeding, ensure the following software is installed on your system:
 
 - **Docker**: Required for running database instances in containers.
+  - **For macOS users running Oracle**: Install Colima, and QEMU (required for both Intel and Apple Silicon Macs when using Colima as the Docker runtime):
+
+    ```bash
+    # Using Homebrew
+    brew install colima qemu
+    
+    # Or install manually from:
+    # Colima: https://github.com/abiosoft/colima
+    # QEMU: https://www.qemu.org/download/
+    ```
+
 - **Python 3**: Necessary for some scripting operations.
 - **Unzip**: Needed to extract the WSO2 IS ZIP file.
 - **Node.js** and npm: Essential for MSSQL database configuration, especially on ARM64 architectures.
