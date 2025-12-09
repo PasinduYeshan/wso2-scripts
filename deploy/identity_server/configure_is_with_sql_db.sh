@@ -34,7 +34,7 @@ RUN_IS_IN_DEBUG_MODE=$(get_config_value "server" "run_in_debug")
 MYSQL_CONNECTOR_PATH="drivers/mysql-connector-java-8.0.30.jar"
 POSTGRESQL_CONNECTOR_PATH="drivers/postgresql-42.7.0.jar"
 MSSQL_CONNECTOR_PATH="drivers/mssql-jdbc-7.0.0.jre8.jar"
-ORACLE_CONNECTOR_PATH=""
+ORACLE_CONNECTOR_PATH="drivers/ojdbc8-23.2.0.0.jar"
 DB2_CONNECTOR_PATH="drivers/db2jcc4.jar"
 
 PATCHES_FOLDER_PATH="patches"
@@ -149,8 +149,7 @@ copy_jdbc_drivers() {
             cp $MSSQL_CONNECTOR_PATH $IS_CONNECTOR_DIR
             ;;
         $ORACLE)
-            # cp $ORACLE_CONNECTOR_PATH $IS_CONNECTOR_DIR
-            # Not implemented
+            cp $ORACLE_CONNECTOR_PATH $IS_CONNECTOR_DIR
             ;;
         $DB2)
             cp $DB2_CONNECTOR_PATH $IS_CONNECTOR_DIR
