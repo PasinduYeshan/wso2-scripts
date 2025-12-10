@@ -33,19 +33,6 @@ check_prerequisites() {
     fi
 }
 
-# Check if npm and node are installed.
-check_if_node_npm_installed() {
-    if ! command -v npm >/dev/null 2>&1; then
-        echo "Error: npm is not installed or not found in PATH."
-        exit 1
-    fi
-
-    if ! command -v node >/dev/null 2>&1; then
-        echo "Error: node is not installed or not found in PATH."
-        exit 1
-    fi
-}
-
 # Function to get configuration value by section and key
 get_config_value() {
     local section=$1
