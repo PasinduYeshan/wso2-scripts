@@ -16,8 +16,15 @@ fi
 # Function to start Colima for Oracle on ARM64
 start_colima_for_oracle() {
     if ! command -v colima &> /dev/null; then
-        echo "Colima is not installed. Installing via Homebrew..."
-        brew install colima docker
+        echo "Error: Colima is not installed. Please install Colima, and QEMU."
+        echo "Refer to the README for manual installation instructions."
+        exit 1
+    fi
+    
+    if ! command -v qemu-img &> /dev/null; then
+        echo "Error: QEMU is not installed. QEMU is required for x86_64 emulation on ARM64."
+        echo "Or refer to the README for manual installation instructions."
+        exit 1
     fi
     
     # Check if Colima is already running
@@ -281,33 +288,45 @@ configure_oracle_database() {
     echo "Configuring Oracle database."
     
     # Wait for Oracle to be ready (gvenzl/oracle-xe is faster but still needs time)
-    echo "Waiting for Oracle to be ready. This may take a few minutes..."
-    sleep 30
+    echo "Waiting for Oracle to be ready. This may take 3-5 minutes (longer on ARM64 with emulation)..."
+    sleep 60
     
     # Check if Oracle is ready
     start_time=$(date +%s)
-    timeout=$((10 * 60))  # 10 minutes timeout
+    timeout=$((15 * 60))  # 15 minutes timeout (generous for ARM64 emulation)
     
     while true; do
-        if docker exec $container_name bash -c "source /home/oracle/.bashrc; echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/$DB_PASSWORD@//localhost:1521/XE" &> /dev/null; then
-            echo "Oracle is ready."
+        # Check if Oracle is fully started by querying the database status
+        db_status=$(docker exec $container_name bash -c "source /home/oracle/.bashrc; echo 'SELECT STATUS FROM V\$INSTANCE;' | sqlplus -s system/$DB_PASSWORD@//localhost:1521/XE 2>&1" | grep -i "OPEN" || echo "NOT_READY")
+        
+        if [[ "$db_status" == *"OPEN"* ]]; then
+            echo "Oracle database is fully open and ready."
             break
         fi
         
         current_time=$(date +%s)
-        if (( current_time - start_time > timeout )); then
-            echo "Timeout reached while waiting for Oracle to start."
+        elapsed_time=$((current_time - start_time))
+        if (( elapsed_time > timeout )); then
+            echo "Timeout reached (${elapsed_time}s) while waiting for Oracle to start."
+            echo "Check container logs with: docker logs $container_name"
             exit 1
         fi
         
-        echo "Still waiting for Oracle to start..."
+        echo "Still waiting for Oracle to start... (${elapsed_time}s elapsed)"
         sleep 20
     done
+    
+    # Additional wait to ensure database is fully ready
+    echo "Waiting an additional 10 seconds to ensure database is stable..."
+    sleep 10
     
     # Create users for identity and shared databases (Oracle uses schemas as databases)
     echo "Creating Oracle users/schemas: $IDENTITY_DB_NAME and $SHARED_DB_NAME"
     docker exec -i $container_name bash -c "source /home/oracle/.bashrc; sqlplus /nolog" <<EOF
 CONNECT SYS/$DB_PASSWORD AS SYSDBA
+
+-- Ensure database is open
+ALTER DATABASE OPEN;
 
 -- Drop users if they exist (ignore errors if they don't exist)
 WHENEVER SQLERROR CONTINUE;
