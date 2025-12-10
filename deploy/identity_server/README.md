@@ -7,11 +7,11 @@ This README outlines the steps to run the WSO2 Identity Server (IS) with various
 Before proceeding, ensure the following software is installed on your system:
 
 - **Docker**: Required for running database instances in containers.
-  - **For macOS users running Oracle**: Install Colima, and QEMU (required for both Intel and Apple Silicon Macs when using Colima as the Docker runtime):
+  - **For macOS users running Oracle**: Install Colima, Lima, and QEMU (required for both Intel and Apple Silicon Macs when using Colima as the Docker runtime):
 
     ```bash
     # Using Homebrew
-    brew install colima qemu
+    brew install colima qemu lima lima-additional-guestagents
     
     # Or install manually from:
     # Colima: https://github.com/abiosoft/colima
@@ -129,3 +129,34 @@ chmod +x configure_is_with_sql_db.sh
 
 ## Output and Logging
 The script provides detailed output on the console regarding the database and IS configuration. This includes information such as the database type, container name, database port, and credentials. Additionally, this information is also logged into a file named `process_info.log` in the same directory as the script.
+
+## Troubleshooting
+
+### Oracle Setup Issues
+
+**Error: `FATA[0001] error starting vm: error at 'creating and starting': exit status 1`**
+
+If you encounter this error when setting up Oracle with Colima:
+
+1. Verify that all Colima dependencies are installed (QEMU and Lima):
+
+   ```bash
+   brew install colima qemu lima lima-additional-guestagents
+   ```
+
+2. As a last resort, if the VM is corrupt, delete and recreate Colima:
+
+   ```bash
+   colima delete
+   ```
+
+   Then start Colima again.
+
+**Error: `getting credentials - err: exec: "docker-credential-osxkeychain": executable file not found in $PATH`**
+
+Install the Docker credential helper:
+
+```bash
+brew install docker-credential-helper
+```
+
