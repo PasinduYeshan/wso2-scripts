@@ -68,7 +68,7 @@ unzip_dir_path=/Users/pasindu/project/is/mssql
 is_folder_name= #Zip file name without the extension is taken by default.
 
 [database]
-type=mssql # mysql, postgresql, mssql, or db2
+type=mssql # mysql, postgresql, mssql, db2, or oracle.
 password=myStrongPaas42!emc2
 identity_db_name=WSO2_IDENTITY_DB
 shared_db_name=WSO2_SHARED_DB
@@ -94,7 +94,7 @@ This section defines the file paths related to the WSO2 Identity Server (IS) ZIP
 #### [database] Section
 This section configures the database settings for the WSO2 IS.
 
-- `type`: Specifies the type of database to be used. Possible values are mysql, postgresql, and mssql.
+- `type`: Specifies the type of database to be used. Possible values are mysql, postgresql, mssql, db2, or oracle.
 bash
 - `identity_db_name`: The name of the identity database to be created.
 - `shared_db_name`: The name of the shared database to be created.
