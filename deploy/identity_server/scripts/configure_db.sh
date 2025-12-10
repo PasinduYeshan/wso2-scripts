@@ -258,7 +258,7 @@ configure_oracle_database() {
     
     while true; do
         # Check if Oracle is fully started by querying the database status
-        db_status=$(docker exec $container_name bash -c "source /home/oracle/.bashrc; echo 'SELECT STATUS FROM V\$INSTANCE;' | sqlplus -s system/$DB_PASSWORD@//localhost:1521/XE 2>&1" | grep -i "OPEN" || echo "NOT_READY")
+        db_status=$(docker exec $container_name bash -c "echo 'SELECT STATUS FROM V\$INSTANCE;' | sqlplus -s system/$DB_PASSWORD@//localhost:1521/XE 2>&1" | grep -i "OPEN" || echo "NOT_READY")
         
         if [[ "$db_status" == *"OPEN"* ]]; then
             echo "Oracle database is fully open and ready."
@@ -283,7 +283,7 @@ configure_oracle_database() {
     
     # Create users for identity and shared databases (Oracle uses schemas as databases)
     echo "Creating Oracle users/schemas: $IDENTITY_DB_NAME and $SHARED_DB_NAME"
-    docker exec -i $container_name bash -c "source /home/oracle/.bashrc; sqlplus /nolog" <<EOF
+    docker exec -i $container_name sqlplus /nolog <<EOF
 CONNECT SYS/$DB_PASSWORD AS SYSDBA
 
 -- Ensure database is open
