@@ -9,8 +9,6 @@ deploy/mysql_is/patches/*
 deploy/identity_server/patches/*
 deploy/identity_server/process_info.log
 
-*node_modules*
-
 # Exclude python virtual environment
 *myenv/
 

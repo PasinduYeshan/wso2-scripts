@@ -20,7 +20,6 @@ Before proceeding, ensure the following software is installed on your system:
 
 - **Python 3**: Necessary for some scripting operations.
 - **Unzip**: Needed to extract the WSO2 IS ZIP file.
-- **Node.js** and npm: Essential for MSSQL database configuration, especially on ARM64 architectures.
 - A text editor (like Vim, Nano, or VS Code) for editing configuration files.
 
 ## Supported Database Types
