@@ -38,6 +38,8 @@ pull_image_with_fallback() {
         docker pull "$default_image"
         RESOLVED_IMAGE="$default_image"
     fi
+}
+
 # Function to start Colima for Oracle on ARM64
 start_colima_for_oracle() {
     if ! command -v colima &> /dev/null; then

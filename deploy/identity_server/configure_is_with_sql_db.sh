@@ -216,10 +216,10 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-# remove_existing_dir_and_unzip
-# copy_jdbc_drivers
-# update_deployment_toml
-# copy_patch_files
+remove_existing_dir_and_unzip
+copy_jdbc_drivers
+update_deployment_toml
+copy_patch_files
 configure_database
 print_db_info
 run_is

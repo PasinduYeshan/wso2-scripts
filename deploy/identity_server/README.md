@@ -1,6 +1,6 @@
 # Running WSO2 Identity Server with Dockerized Databases
 
-This README outlines the steps to run the WSO2 Identity Server (IS) with various databases (e.g., MySQL) using Docker and the `run_is_with_docker_db.sh` script.
+This README outlines the steps to run the WSO2 Identity Server (IS) with various databases (e.g., MySQL) using Docker and the `configure_is_with_sql_db.sh` script.
 
 ## Prerequisites
 
@@ -62,13 +62,16 @@ Open the `config.ini` file in your preferred text editor and set the configurati
 
 ```ini
 [files]
-zip_file_path=/Users/pasindu/project/wso2is-7.0.0-rc1-SNAPSHOT.zip
-unzip_dir_path=/Users/pasindu/project/is/mssql
-is_folder_name= #Zip file name without the extension is taken by default.
+is_already_unzipped=false
+zip_file_path=/path/to/wso2is-7.1.0.zip
+unzip_dir_path=/path/to/unzip/dir
+is_folder_name= # Zip file name without the extension is taken by default.
 
 [database]
-type=mssql # mysql, postgresql, mssql, db2, or oracle.
-password=myStrongPaas42!emc2
+type=mysql # mysql, postgresql, mssql, db2, or oracle.
+; version=8.0 # Optional: Docker image tag. Uses latest if not set.
+; container_name=mysql_8_0 # Optional: Custom container name. Uses default if not set.
+password=myStrongPaas42emc2
 identity_db_name=WSO2_IDENTITY_DB
 shared_db_name=WSO2_SHARED_DB
 enable_pooling=false
@@ -94,7 +97,9 @@ This section defines the file paths related to the WSO2 Identity Server (IS) ZIP
 This section configures the database settings for the WSO2 IS.
 
 - `type`: Specifies the type of database to be used. Possible values are mysql, postgresql, mssql, db2, or oracle.
-bash
+- `version`: (Optional) Docker image tag for the database (e.g., `8.0`). Uses latest if not set.
+- `container_name`: (Optional) Custom Docker container name. Uses a default name based on the DB type if not set.
+- `password`: The database password.
 - `identity_db_name`: The name of the identity database to be created.
 - `shared_db_name`: The name of the shared database to be created.
 - `enable_pooling`: Enables or disables database connection pooling.
@@ -111,7 +116,7 @@ The script sets up Docker containers based on the specified database type (type 
 
 For detailed steps on running the script and additional information, refer to the "Running the Script" section below.
 
-Note: Update the paths, database details, and server settings as needed to match your specific setup. The configurations in `config.ini`` should be appropriately modified before running the script.
+Note: Update the paths, database details, and server settings as needed to match your specific setup. The configurations in `config.ini` should be appropriately modified before running the script.
 
 
 ## Patching the IS
@@ -133,6 +138,24 @@ The script provides detailed output on the console regarding the database and IS
 
 ### Oracle Setup Issues
 
+Oracle on ARM64 (Apple Silicon) requires Colima to be running with `x86_64` architecture, as the `gvenzl/oracle-xe` image has no native ARM64 image. Colima must be initialised with the correct architecture before running the script — it cannot be changed after initial setup.
+
+If you have an existing Colima instance with a different architecture, you will see:
+
+```
+WARN[0000] 'architecture' cannot be updated after initial setup, discarded
+```
+
+In this case, delete the existing instance and recreate it with `x86_64`:
+
+```bash
+colima stop
+colima delete
+colima start --arch x86_64 --memory 8
+```
+
+The script handles starting/stopping Colima automatically once it is installed with the correct architecture.
+
 **Error: `FATA[0001] error starting vm: error at 'creating and starting': exit status 1`**
 
 If you encounter this error when setting up Oracle with Colima:
@@ -150,6 +173,35 @@ If you encounter this error when setting up Oracle with Colima:
    ```
 
    Then start Colima again.
+
+**Docker/Colima becomes unresponsive (e.g., `docker ps` hangs)**
+
+This can happen when Colima's VM runs out of resources, especially with x86_64 emulation on Apple Silicon.
+
+1. Force stop Colima:
+
+   ```bash
+   colima stop --force
+   ```
+
+   If that also hangs, kill the processes manually:
+
+   ```bash
+   pkill -9 -f colima
+   pkill -9 -f qemu
+   ```
+
+2. Restart with sufficient resources:
+
+   ```bash
+   colima start --arch x86_64 --memory 4 --cpu 4
+   ```
+
+3. Verify Docker is working before re-running the script:
+
+   ```bash
+   docker ps
+   ```
 
 **Error: `getting credentials - err: exec: "docker-credential-osxkeychain": executable file not found in $PATH`**
 
