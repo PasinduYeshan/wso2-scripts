@@ -1,8 +1,8 @@
-setup_mssql_js_script="scripts/setup_mssql_db.js"
 MYSQL_IMAGE="mysql:latest"
 POSTGRESQL_IMAGE="postgres:latest"
 IS_ARM64=false
 MSSQL_IMAGE="mcr.microsoft.com/mssql/server:2019-latest"
+ORACLE_IMAGE="gvenzl/oracle-xe:latest"
 DB2_IMAGE="ibmcom/db2"
 DB2_DB="TEST"
 
@@ -38,6 +38,40 @@ pull_image_with_fallback() {
         docker pull "$default_image"
         RESOLVED_IMAGE="$default_image"
     fi
+# Function to start Colima for Oracle on ARM64
+start_colima_for_oracle() {
+    if ! command -v colima &> /dev/null; then
+        echo "Error: Colima is not installed. Please install Colima, and QEMU."
+        echo "Refer to the README for manual installation instructions."
+        exit 1
+    fi
+    
+    if ! command -v qemu-img &> /dev/null; then
+        echo "Error: QEMU is not installed. QEMU is required for x86_64 emulation on ARM64."
+        echo "Or refer to the README for manual installation instructions."
+        exit 1
+    fi
+    
+    # Check if Colima is already running
+    if colima status &> /dev/null; then
+        echo "Colima is already running."
+        # Check if it's running with correct architecture
+        if colima list | grep -q "x86_64"; then
+            echo "Colima is running with x86_64 architecture."
+        else
+            echo "Colima is running but not with x86_64 architecture."
+            echo "Stopping and restarting with correct settings..."
+            colima stop
+            colima start --arch x86_64 --memory 8
+        fi
+    else
+        echo "Starting Colima with x86_64 architecture and 8GB memory..."
+        colima start --arch x86_64 --memory 8
+    fi
+    
+    # Switch Docker context to Colima
+    docker context use colima
+    echo "Docker context switched to Colima."
 }
 
 # Checks if a port is in use.
@@ -86,7 +120,19 @@ create_docker_container() {
             docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d "$RESOLVED_IMAGE"
             ;;
         $ORACLE)
-            echo "Oracle database setup not implemented."
+            docker pull $ORACLE_IMAGE
+            if $IS_ARM64; then
+                echo "Running on ARM64 architecture with platform flag."
+                docker run --platform=linux/amd64 -d -p 1521:1521 --name $container_name \
+                -e ORACLE_PASSWORD=$DB_PASSWORD \
+                -v oracle-volume:/opt/oracle/oradata \
+                $ORACLE_IMAGE
+            else
+                docker run -d -p 1521:1521 --name $container_name \
+                -e ORACLE_PASSWORD=$DB_PASSWORD \
+                -v oracle-volume:/opt/oracle/oradata \
+                $ORACLE_IMAGE
+            fi
             ;;
 
         $DB2)
@@ -134,6 +180,12 @@ start_or_create_container() {
 
 # Main setup function for container.
 setup_container() {
+    # If Oracle on ARM64, ensure Colima is running
+    if [ "$DB_TYPE" = "$ORACLE" ] && $IS_ARM64; then
+        echo "Oracle database on ARM64 requires Colima."
+        start_colima_for_oracle
+    fi
+    
     recreate_container_if_needed
     start_or_create_container
     wait_for_container_ready
@@ -208,13 +260,141 @@ configure_mssql_database() {
 }
 
 configure_mssql_database_arm64() {
-    echo "Configuring MSSQL database."
-    sleep 20
+    echo "Configuring MSSQL database on ARM64 (Azure SQL Edge)."
+    
+    # Wait for Azure SQL Edge to be ready (takes longer on ARM64)
+    echo "Waiting for Azure SQL Edge to be ready. This may take a few minutes..."
+    sleep 30
+    
+    # Check if MSSQL is ready
+    start_time=$(date +%s)
+    timeout=$((5 * 60))  # 5 minutes timeout
+    
+    while true; do
+        if docker exec $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q "SELECT 1" &> /dev/null; then
+            echo "Azure SQL Edge is ready."
+            break
+        fi
+        
+        current_time=$(date +%s)
+        if (( current_time - start_time > timeout )); then
+            echo "Timeout reached while waiting for Azure SQL Edge to start."
+            echo "Check container logs with: docker logs $container_name"
+            exit 1
+        fi
+        
+        echo "Still waiting for Azure SQL Edge to start..."
+        sleep 15
+    done
 
-    echo "Running on ARM64, setting up databases using Node.js script"
-    npm install tedious@14.7.0 --save &&
-    npm i async --save &&
-    node $setup_mssql_js_script "$DB_SCRIPTS_DIR" "$DB_PASSWORD" "$IDENTITY_DB_NAME" "$SHARED_DB_NAME" "$db_port"
+    # Create databases.
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
+    "CREATE DATABASE $IDENTITY_DB_NAME;"
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
+    "CREATE DATABASE $SHARED_DB_NAME;"
+
+    # Copy SQL scripts to the container.
+    docker exec $container_name mkdir -p /tmp/dbscripts/identity
+    docker exec $container_name mkdir -p /tmp/dbscripts/consent
+    docker cp "$DB_SCRIPTS_DIR/identity/mssql.sql" "$container_name:/tmp/dbscripts/identity/mssql.sql"
+    docker cp "$DB_SCRIPTS_DIR/consent/mssql.sql" "$container_name:/tmp/dbscripts/consent/mssql.sql"
+    docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
+
+    # Execute SQL scripts.
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
+    $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
+    $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
+    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
+    $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
+}
+
+configure_oracle_database() {
+    echo "Configuring Oracle database."
+    
+    # Wait for Oracle to be ready (gvenzl/oracle-xe is faster but still needs time)
+    echo "Waiting for Oracle to be ready. This may take 3-5 minutes (longer on ARM64 with emulation)..."
+    sleep 60
+    
+    # Check if Oracle is ready
+    start_time=$(date +%s)
+    timeout=$((15 * 60))  # 15 minutes timeout (generous for ARM64 emulation)
+    
+    while true; do
+        # Check if Oracle is fully started by querying the database status
+        db_status=$(docker exec $container_name bash -c "echo 'SELECT STATUS FROM V\$INSTANCE;' | sqlplus -s system/$DB_PASSWORD@//localhost:1521/XE 2>&1" | grep -i "OPEN" || echo "NOT_READY")
+        
+        if [[ "$db_status" == *"OPEN"* ]]; then
+            echo "Oracle database is fully open and ready."
+            break
+        fi
+        
+        current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        if (( elapsed_time > timeout )); then
+            echo "Timeout reached (${elapsed_time}s) while waiting for Oracle to start."
+            echo "Check container logs with: docker logs $container_name"
+            exit 1
+        fi
+        
+        echo "Still waiting for Oracle to start... (${elapsed_time}s elapsed)"
+        sleep 20
+    done
+    
+    # Additional wait to ensure database is fully ready
+    echo "Waiting an additional 10 seconds to ensure database is stable..."
+    sleep 10
+    
+    # Create users for identity and shared databases (Oracle uses schemas as databases)
+    echo "Creating Oracle users/schemas: $IDENTITY_DB_NAME and $SHARED_DB_NAME"
+    docker exec -i $container_name sqlplus /nolog <<EOF
+CONNECT SYS/$DB_PASSWORD AS SYSDBA
+
+-- Ensure database is open
+ALTER DATABASE OPEN;
+
+-- Drop users if they exist (ignore errors if they don't exist)
+WHENEVER SQLERROR CONTINUE;
+DROP USER $IDENTITY_DB_NAME CASCADE;
+DROP USER $SHARED_DB_NAME CASCADE;
+WHENEVER SQLERROR EXIT SQL.SQLCODE;
+
+-- Create users with default tablespace
+CREATE USER $IDENTITY_DB_NAME IDENTIFIED BY $DB_PASSWORD DEFAULT TABLESPACE users;
+CREATE USER $SHARED_DB_NAME IDENTIFIED BY $DB_PASSWORD DEFAULT TABLESPACE users;
+
+-- Grant privileges
+GRANT CONNECT, RESOURCE TO $IDENTITY_DB_NAME;
+GRANT CONNECT, RESOURCE TO $SHARED_DB_NAME;
+
+-- Grant unlimited quota on users tablespace
+ALTER USER $IDENTITY_DB_NAME QUOTA UNLIMITED ON users;
+ALTER USER $SHARED_DB_NAME QUOTA UNLIMITED ON users;
+
+-- Grant all privileges
+GRANT ALL PRIVILEGES TO $IDENTITY_DB_NAME;
+GRANT ALL PRIVILEGES TO $SHARED_DB_NAME;
+
+EXIT;
+EOF
+
+    # Copy SQL scripts to the container
+    docker exec $container_name mkdir -p /tmp/dbscripts/identity
+    docker exec $container_name mkdir -p /tmp/dbscripts/consent
+    docker cp "$DB_SCRIPTS_DIR/identity/oracle.sql" "$container_name:/tmp/dbscripts/identity/oracle.sql"
+    docker cp "$DB_SCRIPTS_DIR/consent/oracle.sql" "$container_name:/tmp/dbscripts/consent/oracle.sql"
+    docker cp "$DB_SCRIPTS_DIR/oracle.sql" "$container_name:/tmp/dbscripts/oracle.sql"
+    
+    # Execute SQL scripts in the Identity schema
+    echo "Executing identity scripts in Oracle schema $IDENTITY_DB_NAME"
+    docker exec $container_name bash -c "sqlplus -s $IDENTITY_DB_NAME/$DB_PASSWORD@//localhost:1521/XE @/tmp/dbscripts/identity/oracle.sql < /dev/null"
+    docker exec $container_name bash -c "sqlplus -s $IDENTITY_DB_NAME/$DB_PASSWORD@//localhost:1521/XE @/tmp/dbscripts/consent/oracle.sql < /dev/null"
+    
+    # Execute SQL scripts in the Shared schema
+    echo "Executing shared script in Oracle schema $SHARED_DB_NAME"
+    docker exec $container_name bash -c "sqlplus -s $SHARED_DB_NAME/$DB_PASSWORD@//localhost:1521/XE @/tmp/dbscripts/oracle.sql < /dev/null"
+    
+    echo "Oracle database configuration completed."
 }
 
 configure_db2_database() {
@@ -292,13 +472,13 @@ configure_database() {
             ;;
         $MSSQL)
             if $IS_ARM64; then
-                check_if_node_npm_installed
                 configure_mssql_database_arm64
             else
                 configure_mssql_database
             fi
             ;;
         $ORACLE)
+            configure_oracle_database
             ;;
         $DB2)
             configure_db2_database

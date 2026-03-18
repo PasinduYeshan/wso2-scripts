@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "async": "^3.2.5",
-    "tedious": "^14.7.0"
-  }
-}
