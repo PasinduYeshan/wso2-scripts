@@ -1,6 +1,6 @@
 setup_mssql_js_script="scripts/setup_mssql_db.js"
 MYSQL_IMAGE="mysql:latest"
-POSTGRESQL_IMAGE="postgres"
+POSTGRESQL_IMAGE="postgres:latest"
 IS_ARM64=false
 MSSQL_IMAGE="mcr.microsoft.com/mssql/server:2019-latest"
 DB2_IMAGE="ibmcom/db2"
@@ -12,6 +12,33 @@ if [[ $(uname -m) == 'arm64' ]]; then
     MSSQL_IMAGE="mcr.microsoft.com/azure-sql-edge"
     DB2_IMAGE="ibmcom/db2-amd64"
 fi
+
+# Override image tags if a specific DB_VERSION is provided.
+if [ -n "$DB_VERSION" ]; then
+    MYSQL_IMAGE="mysql:$DB_VERSION"
+    POSTGRESQL_IMAGE="postgres:$DB_VERSION"
+    if ! $IS_ARM64; then
+        MSSQL_IMAGE="mcr.microsoft.com/mssql/server:$DB_VERSION"
+    fi
+    if $IS_ARM64; then
+        DB2_IMAGE="ibmcom/db2-amd64:$DB_VERSION"
+    else
+        DB2_IMAGE="ibmcom/db2:$DB_VERSION"
+    fi
+fi
+
+# Pulls a Docker image. Falls back to the default (latest) image if the versioned pull fails.
+pull_image_with_fallback() {
+    local image=$1
+    local default_image=$2
+    RESOLVED_IMAGE="$image"
+    echo "Pulling Docker image: $image"
+    if ! docker pull "$image"; then
+        echo "Warning: Could not pull '$image'. Falling back to '$default_image'."
+        docker pull "$default_image"
+        RESOLVED_IMAGE="$default_image"
+    fi
+}
 
 # Checks if a port is in use.
 is_port_in_use() {
@@ -47,31 +74,31 @@ wait_for_container_ready() {
 create_docker_container() {
     case $DB_TYPE in
         $MYSQL)
-            docker pull $MYSQL_IMAGE
-            docker run --name "$container_name" -p 3306:3306 -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD -d $MYSQL_IMAGE
+            pull_image_with_fallback "$MYSQL_IMAGE" "mysql:latest"
+            docker run --name "$container_name" -p 3306:3306 -e MYSQL_ROOT_PASSWORD=$DB_PASSWORD -d "$RESOLVED_IMAGE"
             ;;
         $POSTGRESQL)
-            docker pull $POSTGRESQL_IMAGE
-            docker run -d -p 5432:5432 --name "$container_name" -e POSTGRES_PASSWORD=$DB_PASSWORD $POSTGRESQL_IMAGE
+            pull_image_with_fallback "$POSTGRESQL_IMAGE" "postgres:latest"
+            docker run -d -p 5432:5432 --name "$container_name" -e POSTGRES_PASSWORD=$DB_PASSWORD "$RESOLVED_IMAGE"
             ;;
         $MSSQL)
-            docker pull $MSSQL_IMAGE
-            docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d $MSSQL_IMAGE
+            pull_image_with_fallback "$MSSQL_IMAGE" "mcr.microsoft.com/mssql/server:2019-latest"
+            docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=$DB_PASSWORD" -p 1433:1433 --name $container_name -d "$RESOLVED_IMAGE"
             ;;
         $ORACLE)
             echo "Oracle database setup not implemented."
             ;;
 
         $DB2)
-            docker pull $DB2_IMAGE
+            pull_image_with_fallback "$DB2_IMAGE" "ibmcom/db2"
             if $IS_ARM64; then
                 echo "Running on ARM64 architecture."
                 docker run --platform=linux/amd64 -itd --name "$container_name" --privileged=true -p 50000:50000 \
-                -e LICENSE=accept -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$DB2_DB $DB2_IMAGE
+                -e LICENSE=accept -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$DB2_DB "$RESOLVED_IMAGE"
             else
                 # TODO: Path to db storage needs to be updated for linux.
                 docker run -itd --name "$container_name" --privileged=true -p 50000:50000 -e LICENSE=accept \
-                -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$DB2_DB -v /path/to/db/storage:/database $DB2_IMAGE
+                -e DB2INST1_PASSWORD=$DB_PASSWORD -e DBNAME=$DB2_DB -v /path/to/db/storage:/database "$RESOLVED_IMAGE"
             fi
             ;;
     esac
@@ -285,6 +312,7 @@ print_db_info() {
     {
         printf "\nDatabase Configuration:\n"
         printf "%-25s %s\n" "Database Type:" "$DB_TYPE"
+        printf "%-25s %s\n" "Database Version:" "${DB_VERSION:-latest}"
         printf "%-25s %s\n" "Container Name:" "$container_name"
         printf "%-25s %s\n" "Database Port:" "$db_port"
         printf "%-25s %s\n" "Database Username:" "$DB_USERNAME"

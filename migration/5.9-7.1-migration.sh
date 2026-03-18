@@ -4,7 +4,8 @@ set -e
 
 SOURCE_IS_DIR="/Users/pasindu/project/is-packs/older-packs/wso2is-5.9.0"
 # TARGET_IS_DIR="/Users/pasindu/project/is-packs/analysis/staging/wso2is-5.10.0"
-TARGET_IS_DIR="/Users/pasindu/project/is-packs/analysis/staging/wso2is-7.1.0"
+# TARGET_IS_DIR="/Users/pasindu/project/is-packs/analysis/wso2is-7.1.0"
+TARGET_IS_DIR="/Users/pasindu/project/is-packs/analysis/other/wso2is-7.1.0"
 SQL_FILE="user_id_migration_postgresql.sql"
 
 # Check if source tenants directory exists
@@ -42,7 +43,7 @@ DB_USER="postgres"
 DB_PASSWORD="myStrongPaas42emc2"
 
 echo "Copying db drivers to '$TARGET_IS_DIR/repository/components/lib'..."
-cp "/Users/pasindu/project/wso2-repos/wso2-scripts/deploy/identity_server/drivers/postgresql-42.7.0.jar" "$TARGET_IS_DIR/repository/components/lib/"
+cp "postgresql-42.7.0.jar" "$TARGET_IS_DIR/repository/components/lib/"
 
 echo "Copying tenants and security directories from '$SOURCE_IS_DIR' to '$TARGET_IS_DIR'..."
 cp -r "$SOURCE_TENANTS_DIR" "$TARGET_REPO_DIR"
