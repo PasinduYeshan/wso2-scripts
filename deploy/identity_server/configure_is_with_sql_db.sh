@@ -19,6 +19,8 @@ IS_FOLDER_NAME=$(get_config_value "files" "is_folder_name")
 UNZIP_DIR_PATH=$(get_config_value "files" "unzip_dir_path")
 
 DB_TYPE=$(get_config_value "database" "type")
+DB_VERSION=$(get_config_value "database" "version")
+DB_CONTAINER_NAME=$(get_config_value "database" "container_name")
 DB_PASSWORD=$(get_config_value "database" "password")
 IDENTITY_DB_NAME=$(get_config_value "database" "identity_db_name")
 SHARED_DB_NAME=$(get_config_value "database" "shared_db_name")
@@ -106,6 +108,11 @@ case $DB_TYPE in
         DB_USERNAME="db2inst1"
         ;;
 esac
+
+# Override container name if explicitly set in config.
+if [ -n "$DB_CONTAINER_NAME" ]; then
+    container_name="$DB_CONTAINER_NAME"
+fi
 
 # If database type is db2, database names should only have characters 1-8
 if [ "$DB_TYPE" = "$DB2" ]; then
@@ -209,10 +216,10 @@ run_is() {
 # ---------------------------------------------------------------------------- #
 #                                    Main                                      #
 # ---------------------------------------------------------------------------- #
-remove_existing_dir_and_unzip
-copy_jdbc_drivers
-update_deployment_toml
-copy_patch_files
+# remove_existing_dir_and_unzip
+# copy_jdbc_drivers
+# update_deployment_toml
+# copy_patch_files
 configure_database
 print_db_info
 run_is

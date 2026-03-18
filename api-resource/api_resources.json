@@ -1,0 +1,1464 @@
+{
+  "id": "74e83a96-14e3-4b97-81f2-fa2718b9e418",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_offline_invite"
+  ]
+}
+{
+  "id": "b00bf2cf-479e-47fe-b815-a3c1f176de95",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_role_mgt_view",
+    "internal_org_role_mgt_create",
+    "internal_org_role_mgt_update",
+    "internal_org_role_mgt_delete"
+  ]
+}
+{
+  "id": "e625c8d9-a3b7-45ee-8a69-51a5a212ab8b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_session_view",
+    "internal_session_delete"
+  ]
+}
+{
+  "id": "70c7030e-49fa-4ac2-9d8f-bf45a34c8fbf",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_webhook_mgt_view",
+    "internal_webhook_mgt_create",
+    "internal_webhook_mgt_update",
+    "internal_webhook_mgt_delete"
+  ]
+}
+{
+  "id": "f0ae9754-044a-4b15-a6ff-dd0beee821ef",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:certificates",
+    "console:certificates_view",
+    "console:certificates_edit"
+  ]
+}
+{
+  "id": "87ab14af-0aa0-45b3-8a7b-5ced884420c1",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_custom_authenticator_create",
+    "internal_org_custom_authenticator_update",
+    "internal_org_custom_authenticator_delete"
+  ]
+}
+{
+  "id": "72201130-d46d-40e0-8999-4c8d55f5ad45",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_impersonate"
+  ]
+}
+{
+  "id": "d993890f-4042-4c5a-9af5-021799dd91b2",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:idps",
+    "console:org:idps_view",
+    "console:org:idps_edit"
+  ]
+}
+{
+  "id": "32ee21e4-0157-4516-96eb-c5d7c1c9dd15",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:idps",
+    "console:idps_view",
+    "console:idps_edit"
+  ]
+}
+{
+  "id": "0aed3347-8e5e-4597-a1a3-bc13a5d1bc0f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:loginAndRegistration",
+    "console:loginAndRegistration_view",
+    "console:loginAndRegistration_edit"
+  ]
+}
+{
+  "id": "1d66e5a3-3b10-4153-8479-19b5e8d7885f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_governance_view",
+    "internal_org_governance_update"
+  ]
+}
+{
+  "id": "818dde9b-798f-4a02-8be3-6b4a561a8934",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_bulk_resource_create",
+    "internal_bulk_user_create",
+    "internal_bulk_user_update",
+    "internal_bulk_user_delete",
+    "internal_bulk_group_create",
+    "internal_bulk_group_update",
+    "internal_bulk_group_delete",
+    "internal_bulk_role_create",
+    "internal_bulk_role_update",
+    "internal_bulk_role_delete"
+  ]
+}
+{
+  "id": "b6054f80-e28a-4c68-be06-faacdb72ff60",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_approval_task_view",
+    "internal_approval_task_update"
+  ]
+}
+{
+  "id": "40161b50-487b-4134-b79d-57fe1c708de3",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:approvalWorkflows",
+    "console:org:approvalWorkflows_view",
+    "console:org:approvalWorkflows_edit"
+  ]
+}
+{
+  "id": "81949f64-d32d-41ec-9042-3fbfbb261df4",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:smsTemplates",
+    "console:smsTemplates_view",
+    "console:smsTemplates_edit"
+  ]
+}
+{
+  "id": "f1b9de00-d5e4-488e-acf4-271e943634ed",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_api_resource_view"
+  ]
+}
+{
+  "id": "bd5cb7b8-9c5c-4efa-be63-91d8fd695ece",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_oauth2_introspect"
+  ]
+}
+{
+  "id": "723380af-f1b5-4e87-91aa-7b9c930dca4b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:flows",
+    "console:flows_view",
+    "console:flows_edit"
+  ]
+}
+{
+  "id": "8a517fc5-db88-4f9f-a444-615ad6cd0607",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_user_mgt_view",
+    "internal_org_user_mgt_list",
+    "internal_org_user_mgt_create",
+    "internal_org_user_mgt_update",
+    "internal_org_user_mgt_delete"
+  ]
+}
+{
+  "id": "abfa149e-cc0e-4f65-bb52-1284ead3616b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_workflow_view",
+    "internal_workflow_create",
+    "internal_workflow_update",
+    "internal_workflow_delete"
+  ]
+}
+{
+  "id": "2c7b8bfa-c9cf-4562-9b6b-981e1e320404",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:users",
+    "console:org:users_view",
+    "console:org:users_edit"
+  ]
+}
+{
+  "id": "a8a7d168-5a1b-4050-877b-4f7736fe307a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_user_association_view",
+    "internal_org_user_association_create",
+    "internal_org_user_association_delete"
+  ]
+}
+{
+  "id": "a92d03e7-5559-46ba-86a9-a9e1defdd992",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_workflow_view",
+    "internal_org_workflow_create",
+    "internal_org_workflow_update",
+    "internal_org_workflow_delete"
+  ]
+}
+{
+  "id": "9fb2b487-7b47-4e27-b5b5-ba6e2c1813dc",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:scopes:oidc",
+    "console:scopes:oidc_view",
+    "console:scopes:oidc_edit"
+  ]
+}
+{
+  "id": "bda1ee44-4c8e-4b6e-8a3a-d514de25f2ec",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_oidc_scope_mgt_view",
+    "internal_oidc_scope_mgt_create",
+    "internal_oidc_scope_mgt_update",
+    "internal_oidc_scope_mgt_delete"
+  ]
+}
+{
+  "id": "ad050ec1-c522-4622-b1c5-03788ae0b998",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:role_assignments",
+    "console:role_assignments_view",
+    "console:role_assignments_edit"
+  ]
+}
+{
+  "id": "b6f03cdb-bf9f-4cf9-a950-29cc1da8b861",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_branding_preference_update"
+  ]
+}
+{
+  "id": "c666f684-fbad-4355-8a07-c8cc70ac1046",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_config_view",
+    "internal_config_create",
+    "internal_config_update",
+    "internal_config_delete"
+  ]
+}
+{
+  "id": "2b0dea4c-bb39-4aa0-870e-f8dca32faa3a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_webhook_meta_view"
+  ]
+}
+{
+  "id": "16fc88b5-9ada-4433-b0b9-459a797aa15f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:agents",
+    "console:agents_view",
+    "console:agents_edit"
+  ]
+}
+{
+  "id": "28ab85cf-24fc-456d-8d3b-000c4c971793",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:users",
+    "console:users_view",
+    "console:users_edit"
+  ]
+}
+{
+  "id": "515f1cf2-3d0d-4464-b628-0bd21c04bff9",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_share",
+    "internal_user_unshare",
+    "internal_user_shared_access_view"
+  ]
+}
+{
+  "id": "73107526-7c2a-4f87-a0e6-661d617f9a5e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:roles",
+    "console:roles_view",
+    "console:roles_edit"
+  ]
+}
+{
+  "id": "ef5a254d-858c-4095-8f6a-3125d06a9e74",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_action_mgt_create",
+    "internal_org_action_mgt_update",
+    "internal_org_action_mgt_view",
+    "internal_org_action_mgt_delete"
+  ]
+}
+{
+  "id": "67ddbef1-be28-4646-ba08-1d964fd035bd",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_fed_user_association_bulk"
+  ]
+}
+{
+  "id": "7df856ea-4765-4b6b-b1d4-7ca136586c99",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:workflowInstances",
+    "console:org:workflowInstances_view",
+    "console:org:workflowInstances_edit"
+  ]
+}
+{
+  "id": "dcd80fdc-8202-4c81-aea1-32d5d0a8408a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_consent_mgt_add",
+    "internal_consent_mgt_delete"
+  ]
+}
+{
+  "id": "949be54a-121f-40e9-aba3-344997bdd35e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:applications",
+    "console:applications_view",
+    "console:applications_edit"
+  ]
+}
+{
+  "id": "df38fcde-9218-4dfc-8e12-1a23e26faed4",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:apiResources",
+    "console:org:apiResources_view",
+    "console:org:apiResources_edit"
+  ]
+}
+{
+  "id": "cc7f1a05-3237-4d66-b3d6-3a18648ed345",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_flow_view",
+    "internal_org_flow_update"
+  ]
+}
+{
+  "id": "0eb2cead-545b-49fa-8ac6-9430248144ab",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_association_view",
+    "internal_user_association_create",
+    "internal_user_association_delete"
+  ]
+}
+{
+  "id": "43a14f86-df44-4b20-8eda-0b86d8160d07",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:loginAndRegistration",
+    "console:org:loginAndRegistration_view",
+    "console:org:loginAndRegistration_edit"
+  ]
+}
+{
+  "id": "6148ac26-4e29-4aab-98c3-723e137d6ad9",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:organizations",
+    "console:org:organizations_view",
+    "console:org:organizations_edit"
+  ]
+}
+{
+  "id": "bdf32cb2-526c-4d5f-8893-dcb3f950760c",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_bulk_resource_create",
+    "internal_org_bulk_user_create",
+    "internal_org_bulk_user_update",
+    "internal_org_bulk_user_delete",
+    "internal_org_bulk_group_create",
+    "internal_org_bulk_group_update",
+    "internal_org_bulk_group_delete",
+    "internal_org_bulk_role_create",
+    "internal_org_bulk_role_update",
+    "internal_org_bulk_role_delete"
+  ]
+}
+{
+  "id": "de00c907-74fa-4f7c-95c4-78ba6917e42f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_recovery_view",
+    "internal_recovery_create"
+  ]
+}
+{
+  "id": "437de5e0-bbea-4855-a378-9da6857113c5",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_user_impersonate"
+  ]
+}
+{
+  "id": "621b3181-814e-407c-9472-4edf1a529e23",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_code_mgt_view",
+    "internal_user_code_mgt_create",
+    "internal_user_code_mgt_update",
+    "internal_user_code_mgt_delete"
+  ]
+}
+{
+  "id": "82c978d7-d3c7-43bd-a315-c6da649fa5b1",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_cors_origins_view"
+  ]
+}
+{
+  "id": "9e3adf3f-89d8-49cc-af66-d82862a01aec",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:eventPublishing"
+  ]
+}
+{
+  "id": "32dba522-fb2a-4cf1-8296-bd660b6c4e62",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_dcr_view",
+    "internal_dcr_create",
+    "internal_dcr_update",
+    "internal_dcr_delete"
+  ]
+}
+{
+  "id": "e9fc8376-89da-4f0e-8ca2-68a6c6ab710a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_custom_authenticator_create",
+    "internal_custom_authenticator_update",
+    "internal_custom_authenticator_delete"
+  ]
+}
+{
+  "id": "2f355f5f-8a70-4acf-9e69-949f893c46f3",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_shared_application_create",
+    "internal_shared_application_view",
+    "internal_shared_application_delete"
+  ]
+}
+{
+  "id": "3ff515b9-be65-40e6-9a72-611dfc1b5e95",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_template_mgt_view",
+    "internal_org_template_mgt_create",
+    "internal_org_template_mgt_update",
+    "internal_org_template_mgt_delete"
+  ]
+}
+{
+  "id": "020f51ce-0328-43b3-b832-e0aff1bd3dec",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_notification_senders_view",
+    "internal_org_notification_senders_create",
+    "internal_org_notification_senders_update",
+    "internal_org_notification_senders_delete"
+  ]
+}
+{
+  "id": "bb37ed2b-b4bd-47a0-906b-b58d3df2ecd7",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_flow_view",
+    "internal_flow_update"
+  ]
+}
+{
+  "id": "a4a538c7-7059-48eb-a448-7a8db3040d33",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_agent_mgt_view",
+    "internal_agent_mgt_list",
+    "internal_agent_mgt_create",
+    "internal_agent_mgt_update",
+    "internal_agent_mgt_delete"
+  ]
+}
+{
+  "id": "124ac030-5b29-4645-a3da-e084e09dce89",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:flows",
+    "console:org:flows_view",
+    "console:org:flows_edit"
+  ]
+}
+{
+  "id": "c0e2fdf6-0d92-4ccc-bdce-60648e0746d4",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_api_resource_create",
+    "internal_api_resource_view",
+    "internal_api_resource_update",
+    "internal_api_resource_delete"
+  ]
+}
+{
+  "id": "c67311e5-6ac3-48e5-b1c8-38630f5be57a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:apiResources",
+    "console:apiResources_view",
+    "console:apiResources_edit"
+  ]
+}
+{
+  "id": "77ca17b8-be97-4d33-9989-19557de0db76",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_authenticator_view"
+  ]
+}
+{
+  "id": "e9a4810d-84d3-4d03-89c0-8ea09db50613",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_update",
+    "internal_organization_delete"
+  ]
+}
+{
+  "id": "62325ca3-7af1-4ce4-b5ea-6cbc47a632b0",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_session_view",
+    "internal_org_session_delete"
+  ]
+}
+{
+  "id": "4fa4db1c-d0a8-445f-8284-b8fb52e8e587",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_role_mgt_view",
+    "internal_role_mgt_meta_create",
+    "internal_role_mgt_meta_update",
+    "internal_role_mgt_users_update",
+    "internal_role_mgt_groups_update",
+    "internal_role_mgt_delete"
+  ]
+}
+{
+  "id": "f2222ae3-1d0f-42dc-bca0-7942c7d6408e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:userstores",
+    "console:userstores_view",
+    "console:userstores_edit"
+  ]
+}
+{
+  "id": "5a51abe1-ee9a-4559-89f9-f0ecf97f3e13",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_workflow_instance_view",
+    "internal_org_workflow_instance_delete"
+  ]
+}
+{
+  "id": "fae53e9d-417d-4c9f-ae93-6e5f3fccc8a3",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_role_mgt_view",
+    "internal_role_mgt_create",
+    "internal_role_mgt_update",
+    "internal_role_mgt_delete"
+  ]
+}
+{
+  "id": "7ddb8357-a33a-4005-82c6-2177b96f18bd",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_validation_rule_mgt_update"
+  ]
+}
+{
+  "id": "6ea7b656-1318-48ee-90f0-83e8103e94d6",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_claim_meta_view",
+    "internal_org_claim_meta_update"
+  ]
+}
+{
+  "id": "26572b1a-13b0-425e-a368-4d5ee84420d7",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_workflow_association_view",
+    "internal_org_workflow_association_create",
+    "internal_org_workflow_association_update",
+    "internal_org_workflow_association_delete"
+  ]
+}
+{
+  "id": "79be8edb-8bf4-476f-86e5-72cf9a4f78f5",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_idvp_view",
+    "internal_idvp_add",
+    "internal_idvp_update",
+    "internal_idvp_delete"
+  ]
+}
+{
+  "id": "f667b52f-d70e-4364-8da0-d413fbbb13aa",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:residentOutboundProvisioning",
+    "console:residentOutboundProvisioning_view",
+    "console:residentOutboundProvisioning_edit"
+  ]
+}
+{
+  "id": "5f39d430-0484-414b-80a5-be9aba4928e2",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:emailTemplates",
+    "console:org:emailTemplates_view",
+    "console:org:emailTemplates_edit"
+  ]
+}
+{
+  "id": "dc6e75d6-85a8-457f-89a3-bb5324d2c302",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_organization_discovery_view",
+    "internal_organization_discovery_update",
+    "internal_organization_discovery_delete"
+  ]
+}
+{
+  "id": "9f39100a-449b-43fd-ba38-c38ef2818f4b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:attributes",
+    "console:org:attributes_view",
+    "console:org:attributes_edit"
+  ]
+}
+{
+  "id": "e45720ea-cfdb-4ac5-93b2-e6b5477151fb",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_async_operation_status_view"
+  ]
+}
+{
+  "id": "55d625db-656a-4aaf-a111-ddb831cd818c",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_fed_user_association_bulk"
+  ]
+}
+{
+  "id": "89805f80-23b4-491f-aa65-8b393dd75b1b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_oauth_scope_view",
+    "internal_oauth_scope_create",
+    "internal_oauth_scope_update",
+    "internal_oauth_scope_delete"
+  ]
+}
+{
+  "id": "04a55895-50a9-47af-ad23-26bcbc336c1b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_organization_discovery_view"
+  ]
+}
+{
+  "id": "ffa1e1d4-cb6a-428f-9e17-7015c73556a3",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:idvps",
+    "console:idvps_view",
+    "console:idvps_edit"
+  ]
+}
+{
+  "id": "5c65223b-f3e0-4ac3-87f9-f793b45e136d",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_workflow_association_view",
+    "internal_workflow_association_create",
+    "internal_workflow_association_update",
+    "internal_workflow_association_delete"
+  ]
+}
+{
+  "id": "a2726967-ae70-4a4a-ac75-04d923b16b98",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_notification_senders_view",
+    "internal_notification_senders_create",
+    "internal_notification_senders_update",
+    "internal_notification_senders_delete"
+  ]
+}
+{
+  "id": "3a3d56ef-a90d-4fa8-a766-c0b3203ef67a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_offline_invite"
+  ]
+}
+{
+  "id": "0228855e-1602-4c87-b8c0-17d33fed5e03",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_cert_validation_mgt_view",
+    "internal_cert_validation_mgt_create",
+    "internal_cert_validation_mgt_update",
+    "internal_cert_validation_mgt_delete"
+  ]
+}
+{
+  "id": "c1d70687-4c80-4b4e-b2a1-f825bbb49092",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_oidc_scope_mgt_view"
+  ]
+}
+{
+  "id": "335b1bb1-b100-4e6f-96ec-84252dcee8fc",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:smsTemplates",
+    "console:org:smsTemplates_view",
+    "console:org:smsTemplates_edit"
+  ]
+}
+{
+  "id": "5fa7ecf5-bd76-4a2c-a8e0-565322b44283",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:home",
+    "console:org:home_view",
+    "console:org:home_edit"
+  ]
+}
+{
+  "id": "4cf5d5ed-68bb-4079-a0e5-1a5a14d02e21",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_mgt_view",
+    "internal_user_mgt_list",
+    "internal_user_mgt_create",
+    "internal_user_mgt_update",
+    "internal_user_mgt_delete"
+  ]
+}
+{
+  "id": "1fc26f56-3d7f-47fd-9b01-973643119de1",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:notificationChannels",
+    "console:notificationChannels_view",
+    "console:notificationChannels_edit"
+  ]
+}
+{
+  "id": "e0ffdf57-9f43-48c4-a954-d425c3bb4ae4",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:secretsManagement"
+  ]
+}
+{
+  "id": "1976a40a-5f42-496e-bdf5-5e770fd8114e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:home",
+    "console:home_view",
+    "console:home_edit"
+  ]
+}
+{
+  "id": "98e22d49-d475-4498-b715-97ab66bdba55",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:userstores",
+    "console:org:userstores_view",
+    "console:org:userstores_edit"
+  ]
+}
+{
+  "id": "ced3c847-1a96-4757-b182-a6dab4d9adcc",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:attributes",
+    "console:attributes_view",
+    "console:attributes_edit"
+  ]
+}
+{
+  "id": "2e536c24-bf60-4cf3-b27f-dd6b2f1ba735",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_governance_view",
+    "internal_governance_update"
+  ]
+}
+{
+  "id": "9bcece7d-942b-4a69-a413-933ea6987e12",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_group_mgt_view",
+    "internal_org_group_mgt_create",
+    "internal_org_group_mgt_update",
+    "internal_org_group_mgt_delete"
+  ]
+}
+{
+  "id": "b8a3e19f-41ee-4c3d-ba81-0f66dff7866e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:branding",
+    "console:branding_view",
+    "console:branding_edit"
+  ]
+}
+{
+  "id": "4640c19e-73c6-421e-9b78-be1bcd1c0108",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_config_view",
+    "internal_org_config_create",
+    "internal_org_config_update",
+    "internal_org_config_delete"
+  ]
+}
+{
+  "id": "54869c1b-7e81-4dd1-91b0-f42dd608b348",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_keystore_view",
+    "internal_keystore_update"
+  ]
+}
+{
+  "id": "a489c758-2618-4f4e-80df-b1c8b3ebea6f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:server"
+  ]
+}
+{
+  "id": "e5883544-1317-4a8e-93ac-f227e73ac44d",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_oauth2_introspect"
+  ]
+}
+{
+  "id": "df256984-d2e9-4ed8-a038-9c0400a40cc2",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:approvalWorkflows",
+    "console:approvalWorkflows_view",
+    "console:approvalWorkflows_edit"
+  ]
+}
+{
+  "id": "3c2779ff-565b-4558-b306-7dded667065b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_user_code_mgt_view",
+    "internal_org_user_code_mgt_create",
+    "internal_org_user_code_mgt_update",
+    "internal_org_user_code_mgt_delete"
+  ]
+}
+{
+  "id": "ca24a7ba-5492-440a-a584-df745eb161b0",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:organizationDiscovery",
+    "console:organizationDiscovery_view",
+    "console:organizationDiscovery_edit"
+  ]
+}
+{
+  "id": "f76997c1-a165-4b17-9df0-8501504b922b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_dcr_view",
+    "internal_org_dcr_create",
+    "internal_org_dcr_update",
+    "internal_org_dcr_delete"
+  ]
+}
+{
+  "id": "56b4cbaf-5911-42dd-b93f-f552e3f49217",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:applications",
+    "console:org:applications_view",
+    "console:org:applications_edit"
+  ]
+}
+{
+  "id": "857dea48-ee09-4090-9300-077bc69b674c",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_cert_validation_mgt_view",
+    "internal_org_cert_validation_mgt_create",
+    "internal_org_cert_validation_mgt_update",
+    "internal_org_cert_validation_mgt_delete"
+  ]
+}
+{
+  "id": "c13ad85d-a362-4b7c-a2c6-131524d79db3",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_application_mgt_create",
+    "internal_org_application_mgt_view",
+    "internal_org_application_mgt_update",
+    "internal_org_application_mgt_delete"
+  ]
+}
+{
+  "id": "a9012262-2b8c-4ae2-b2ab-5b020a12eaaf",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_extensions_view"
+  ]
+}
+{
+  "id": "a4b532ec-866d-452b-b857-168c431ad00d",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_idp_view",
+    "internal_org_idp_create",
+    "internal_org_idp_update",
+    "internal_org_idp_delete"
+  ]
+}
+{
+  "id": "02ad00e9-37b1-4d69-b6f5-31946f84c4ba",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_rule_metadata_view"
+  ]
+}
+{
+  "id": "a95595f9-8d6b-43aa-af69-e5135f30c54f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:scopes:oidc",
+    "console:org:scopes:oidc_view"
+  ]
+}
+{
+  "id": "ef2fcba5-76c8-456a-b9f5-e3963c373ee5",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_extensions_view"
+  ]
+}
+{
+  "id": "5cc16ec6-6938-4b71-9610-f9c59c31417e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_functional_lib_create",
+    "internal_functional_lib_view",
+    "internal_functional_lib_update",
+    "internal_functional_lib_delete"
+  ]
+}
+{
+  "id": "22b9330f-48f5-4238-b3d5-14add359ac6a",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_recovery_view",
+    "internal_org_recovery_create"
+  ]
+}
+{
+  "id": "461974d6-eedc-4bcb-a262-ac69d4cd8937",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_action_mgt_create",
+    "internal_action_mgt_update",
+    "internal_action_mgt_view",
+    "internal_action_mgt_delete"
+  ]
+}
+{
+  "id": "3e8fb7e6-50bb-41a5-b86c-bd15da5212b0",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_rule_metadata_view"
+  ]
+}
+{
+  "id": "d8b8398a-6a37-497b-9cd3-6e5f16f614c0",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_guest_mgt_invite_list",
+    "internal_org_guest_mgt_invite_add",
+    "internal_org_guest_mgt_invite_delete"
+  ]
+}
+{
+  "id": "2b45a4b9-5f52-4182-bade-b265ddf8d4f2",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_user_share",
+    "internal_org_user_unshare",
+    "internal_org_user_shared_access_view"
+  ]
+}
+{
+  "id": "a94519e8-d501-4111-949f-8c749eeac215",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_organization_config_view",
+    "internal_organization_config_add",
+    "internal_organization_config_update",
+    "internal_organization_config_delete"
+  ]
+}
+{
+  "id": "d9e79f0a-1d83-4d8f-ba8f-7eb532cdde0b",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_approval_task_view",
+    "internal_org_approval_task_update"
+  ]
+}
+{
+  "id": "166d7f0a-5981-4b16-99d9-8d2ebdd44732",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_template_mgt_view",
+    "internal_template_mgt_create",
+    "internal_template_mgt_update",
+    "internal_template_mgt_delete"
+  ]
+}
+{
+  "id": "f554c217-3d16-4703-a8e6-9c9f0d828ecc",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_role_mgt_view",
+    "internal_org_role_mgt_meta_create",
+    "internal_org_role_mgt_meta_update",
+    "internal_org_role_mgt_users_update",
+    "internal_org_role_mgt_groups_update",
+    "internal_org_role_mgt_delete"
+  ]
+}
+{
+  "id": "c9ec0a48-196e-4fba-b9db-ed342d8b5295",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:actions",
+    "console:org:actions_view",
+    "console:org:actions_edit"
+  ]
+}
+{
+  "id": "aa628909-5f12-40ab-af65-2472028abe1f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_secret_mgt_add",
+    "internal_secret_mgt_update",
+    "internal_secret_mgt_view",
+    "internal_secret_mgt_delete"
+  ]
+}
+{
+  "id": "98e00675-c608-489c-bbc3-06aad3a4eee7",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:emailTemplates",
+    "console:emailTemplates_view",
+    "console:emailTemplates_edit"
+  ]
+}
+{
+  "id": "3b9babee-1589-4632-a264-4685c7709421",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_permission_mgt_view"
+  ]
+}
+{
+  "id": "d33bf20f-f195-4fa2-b8ee-98e8b8246dd4",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:roles",
+    "console:org:roles_view",
+    "console:org:roles_edit"
+  ]
+}
+{
+  "id": "6bb1009e-70ce-451e-a31e-815b92d31ab6",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:webhooks",
+    "console:webhooks_view",
+    "console:webhooks_edit"
+  ]
+}
+{
+  "id": "0bdd47a2-4ce7-4fe1-8cea-0adf396abc96",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_password_expired_user_view"
+  ]
+}
+{
+  "id": "f04f361a-7e08-4ca0-a6ae-595855be9e53",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_config_mgt_list",
+    "internal_config_mgt_view",
+    "internal_config_mgt_add",
+    "internal_config_mgt_update",
+    "internal_config_mgt_delete"
+  ]
+}
+{
+  "id": "7e96b7e5-bc3f-49cc-b58f-792ba11f4225",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_recovery_create"
+  ]
+}
+{
+  "id": "98f7c965-1946-46fc-b364-03a3961935ed",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:workflowInstances",
+    "console:workflowInstances_view",
+    "console:workflowInstances_edit"
+  ]
+}
+{
+  "id": "626afe38-bbc6-4ada-a0d8-4faf7d1ed5a1",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:branding",
+    "console:org:branding_view",
+    "console:org:branding_edit"
+  ]
+}
+{
+  "id": "0acb55fc-c3b5-44da-bd12-0daa18fca556",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:tenants",
+    "console:tenants_view",
+    "console:tenants_edit"
+  ]
+}
+{
+  "id": "fb34f43f-f38a-4271-83a6-e7e28be83776",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_userstore_create",
+    "internal_userstore_view",
+    "internal_userstore_delete",
+    "internal_userstore_update"
+  ]
+}
+{
+  "id": "8e9ad163-f11d-4fa5-b8dd-5979c3f63902",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:groups",
+    "console:groups_view",
+    "console:groups_edit"
+  ]
+}
+{
+  "id": "49698cee-6047-4a45-9c5d-45a2817acaae",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:role_assignments",
+    "console:org:role_assignments_view",
+    "console:org:role_assignments_edit"
+  ]
+}
+{
+  "id": "7411e3e7-ba1f-4b9e-a15f-e9e72bdad5fc",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_async_operation_status_view"
+  ]
+}
+{
+  "id": "ea24c465-32a3-4ec0-a52f-faf65c48fb1c",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:settings",
+    "console:settings_view",
+    "console:settings_edit"
+  ]
+}
+{
+  "id": "b7ca1108-2ecd-4ee5-a55a-672606e8059e",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:actions",
+    "console:actions_view",
+    "console:actions_edit"
+  ]
+}
+{
+  "id": "bf79d961-c94e-49b2-9b1e-93089e66d2cb",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:groups",
+    "console:org:groups_view",
+    "console:org:groups_edit"
+  ]
+}
+{
+  "id": "32c11302-241b-4c16-8774-1d2c34cad9f4",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_idle_account_list"
+  ]
+}
+{
+  "id": "72bffb6f-4dc4-4482-a967-0bb2973273a1",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:organizations",
+    "console:organizations_view",
+    "console:organizations_edit"
+  ]
+}
+{
+  "id": "0f650419-9a33-4c6a-8e2c-7b8d87386491",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_workflow_instance_view",
+    "internal_workflow_instance_delete"
+  ]
+}
+{
+  "id": "da0ee513-2c85-4299-be19-a954dd269c8c",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_idp_view",
+    "internal_idp_create",
+    "internal_idp_update",
+    "internal_idp_delete"
+  ]
+}
+{
+  "id": "6afce7d6-f885-458f-8022-0300323ab1e6",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_fucntionality_view",
+    "internal_user_fucntionality_create"
+  ]
+}
+{
+  "id": "89464ca4-3d7a-4d5c-b6e6-c3b528340eca",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "console:org:settings",
+    "console:org:settings_view",
+    "console:org:settings_edit"
+  ]
+}
+{
+  "id": "4a92237a-a062-4e2a-83c9-79d75aeda49d",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_idle_account_list"
+  ]
+}
+{
+  "id": "f1745955-ba43-4743-b6c5-26b40455cc07",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_password_expired_user_view"
+  ]
+}
+{
+  "id": "09218cc3-c179-4e96-b790-970a08015269",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_secret_type_mgt_add",
+    "internal_secret_type_mgt_update",
+    "internal_secret_type_mgt_view",
+    "internal_secret_type_mgt_delete"
+  ]
+}
+{
+  "id": "403b696b-ed12-4507-8770-1290db5e9d92",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_group_mgt_view",
+    "internal_group_mgt_create",
+    "internal_group_mgt_update",
+    "internal_group_mgt_delete"
+  ]
+}
+{
+  "id": "16d8a71f-8a04-4c86-96b6-957d7f243ddb",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_claim_meta_create",
+    "internal_claim_meta_view",
+    "internal_claim_meta_update",
+    "internal_claim_meta_delete"
+  ]
+}
+{
+  "id": "f86e7406-90bf-4fac-b259-f2470fb73644",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_email_mgt_view",
+    "internal_email_mgt_create",
+    "internal_email_mgt_update",
+    "internal_email_mgt_delete"
+  ]
+}
+{
+  "id": "764def23-009f-4621-96bb-a7e9ae6636d3",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_admin_advisory_mgt_update"
+  ]
+}
+{
+  "id": "7e8f378b-9dbd-41f9-a1da-6e2ed10b5017",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_email_mgt_view",
+    "internal_org_email_mgt_create",
+    "internal_org_email_mgt_update",
+    "internal_org_email_mgt_delete"
+  ]
+}
+{
+  "id": "781c758a-4c3f-4289-8a96-78924e4e6d26",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_manage_pep"
+  ]
+}
+{
+  "id": "90c84b85-98eb-4b2b-a7b6-e85a8df08714",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_pi_info_view"
+  ]
+}
+{
+  "id": "5bb1ca2f-a3f6-431c-98c6-fd87ad32eeee",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_user_authorizedapp_view",
+    "internal_user_authorizedapp_delete"
+  ]
+}
+{
+  "id": "d7f1ec3a-7c58-4fa8-a954-1b2aafe7e9d1",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_validation_rule_mgt_update"
+  ]
+}
+{
+  "id": "fc2da908-df2e-4e69-bf42-9c089ccfa98f",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_application_mgt_create",
+    "internal_application_mgt_update",
+    "internal_application_mgt_view",
+    "internal_application_mgt_delete"
+  ]
+}
+{
+  "id": "d27157e6-d9ca-415c-8e62-51717c6fc1bb",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_idv_claim_view",
+    "internal_idv_claim_add",
+    "internal_idv_claim_update",
+    "internal_idv_claim_verify"
+  ]
+}
+{
+  "id": "a7be6780-8fea-4eba-92ca-8238d6d5a54d",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_authenticator_view"
+  ]
+}
+{
+  "id": "5b347f0e-afc1-4b9d-bd66-31fe929d8a78",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_branding_preference_update"
+  ]
+}
+{
+  "id": "a09875fc-db1a-4d53-b88d-3f32f0d051e6",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_organization_view",
+    "internal_org_organization_create",
+    "internal_org_organization_update",
+    "internal_org_organization_delete"
+  ]
+}
+{
+  "id": "8b0a567a-85db-4b94-8b94-d94431096b4c",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_org_userstore_view",
+    "internal_org_userstore_create",
+    "internal_org_userstore_delete",
+    "internal_org_userstore_update"
+  ]
+}
+{
+  "id": "ab4d3ed5-06d0-4c3f-9bd5-e943bf10df50",
+  "policyIdentifier": "RBAC",
+  "scopes": [
+    "internal_create_tenants",
+    "internal_list_tenants",
+    "internal_modify_tenants"
+  ]
+}
