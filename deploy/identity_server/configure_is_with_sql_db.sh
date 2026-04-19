@@ -13,6 +13,7 @@ DB2="db2"
 # ---------------------------------------------------------------------------- #
 CONFIG_FILE="config.ini"
 
+IS_FOLDER_PATH=$(get_config_value "files" "is_folder_path")
 IS_ALREADY_UNZIPPED=$(get_config_value "files" "is_already_unzipped")
 ZIP_FILE_PATH=$(get_config_value "files" "zip_file_path")
 IS_FOLDER_NAME=$(get_config_value "files" "is_folder_name")
@@ -41,18 +42,22 @@ DB2_CONNECTOR_PATH="drivers/db2jcc4.jar"
 
 PATCHES_FOLDER_PATH="patches"
 
-# If IS folder name is not given in the config file, get it from the ZIP file.
-if [ -z "$IS_FOLDER_NAME" ]; then
-    ZIP_FILE_BASENAME=$(basename "$ZIP_FILE_PATH")
-    IS_FOLDER_NAME="${ZIP_FILE_BASENAME%.zip}"
-fi
-
-# If UNZIP_DIR_PATH is not given in the config file, use the IS folder name and create a directory in the current path.
-if [ -z "$UNZIP_DIR_PATH" ]; then
-    UNZIPPED_IS_PATH=$IS_FOLDER_NAME
+if [ -n "$IS_FOLDER_PATH" ]; then
+    UNZIPPED_IS_PATH="$IS_FOLDER_PATH"
+    IS_ALREADY_UNZIPPED="true"
     echo "UNZIPPED_IS_PATH: $UNZIPPED_IS_PATH"
 else
-    UNZIPPED_IS_PATH="$UNZIP_DIR_PATH/$IS_FOLDER_NAME"
+    # Legacy zip-based path resolution.
+    if [ -z "$IS_FOLDER_NAME" ]; then
+        ZIP_FILE_BASENAME=$(basename "$ZIP_FILE_PATH")
+        IS_FOLDER_NAME="${ZIP_FILE_BASENAME%.zip}"
+    fi
+
+    if [ -z "$UNZIP_DIR_PATH" ]; then
+        UNZIPPED_IS_PATH=$IS_FOLDER_NAME
+    else
+        UNZIPPED_IS_PATH="$UNZIP_DIR_PATH/$IS_FOLDER_NAME"
+    fi
     echo "UNZIPPED_IS_PATH: $UNZIPPED_IS_PATH"
 fi
 
