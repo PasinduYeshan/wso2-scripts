@@ -8,6 +8,7 @@ deploy/mysql_is/patches/*
 
 deploy/identity_server/patches/*
 deploy/identity_server/process_info.log
+deploy/identity_server/db_backups/
 
 # Exclude python virtual environment
 *myenv/

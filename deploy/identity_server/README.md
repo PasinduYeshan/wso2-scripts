@@ -62,10 +62,14 @@ Open the `config.ini` file in your preferred text editor and set the configurati
 
 ```ini
 [files]
-is_already_unzipped=false
-zip_file_path=/path/to/wso2is-7.1.0.zip
-unzip_dir_path=/path/to/unzip/dir
-is_folder_name= # Zip file name without the extension is taken by default.
+# Simplest option — point directly to the extracted IS folder.
+is_folder_path=/path/to/wso2is-7.1.0
+
+# --- Legacy zip-based options (use is_folder_path above instead) ---
+# is_already_unzipped=false
+# zip_file_path=/path/to/wso2is-7.1.0.zip
+# unzip_dir_path=/path/to/unzip/dir
+# is_folder_name= # Zip file name without the extension is taken by default.
 
 [database]
 type=mysql # mysql, postgresql, mssql, db2, or oracle.
@@ -86,12 +90,15 @@ run_in_debug=false
 The config.ini file contains essential configurations for running the WSO2 Identity Server with Dockerized databases. Below are detailed explanations of each section and configuration option:
 
 #### [files] Section
-This section defines the file paths related to the WSO2 Identity Server (IS) ZIP file and its extraction location.
+This section defines the path to the WSO2 Identity Server installation directory.
 
-- `is_already_unzipped`: Set to true if the IS ZIP file is already extracted.
+- `is_folder_path`: The full path to the already-extracted WSO2 IS folder. **This is the recommended option** — set this alone and leave the zip-based options commented out.
+
+The following legacy options are still supported for backward compatibility when you only have the ZIP file:
+- `is_already_unzipped`: Set to `true` if the IS ZIP file is already extracted.
 - `zip_file_path`: The full file path to the WSO2 IS ZIP file.
 - `unzip_dir_path`: The directory where the IS ZIP file will be extracted.
-- `is_folder_name`: The name of the folder where IS will be unzipped. If left blank, the script assumes the folder name to be the ZIP file's name without the extension.
+- `is_folder_name`: The name of the folder after extraction. If left blank, the ZIP filename (minus `.zip`) is used.
 
 #### [database] Section
 This section configures the database settings for the WSO2 IS.
@@ -133,6 +140,33 @@ chmod +x configure_is_with_sql_db.sh
 
 ## Output and Logging
 The script provides detailed output on the console regarding the database and IS configuration. This includes information such as the database type, container name, database port, and credentials. Additionally, this information is also logged into a file named `process_info.log` in the same directory as the script.
+
+## Backing Up and Restoring Databases
+
+The `backup_restore_db.sh` script lets you snapshot the Identity and Shared databases at any point and restore them in one command. It reads the same `config.ini` and uses the same default container names as the main script — no extra configuration needed.
+
+```bash
+chmod +x backup_restore_db.sh
+
+# Create a snapshot (timestamp only)
+./backup_restore_db.sh backup
+
+# Create a named snapshot (timestamp is prepended automatically)
+./backup_restore_db.sh backup before-consent-migration
+
+# List all snapshots
+./backup_restore_db.sh list
+
+# Restore — prompts to pick a snapshot by name or number
+./backup_restore_db.sh restore
+
+# Restore a specific snapshot directly
+./backup_restore_db.sh restore 2026-04-19_10-30-00_before-consent-migration
+```
+
+Snapshots are saved under `db_backups/` in the script directory and are excluded from git. Each snapshot folder contains the database dumps and a `meta.txt` with the date, DB type, container name, and database names.
+
+> **Note:** The container must be running before taking a backup or restoring. Restore will prompt for confirmation before overwriting the current databases.
 
 ## Troubleshooting
 
