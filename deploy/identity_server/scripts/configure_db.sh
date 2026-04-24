@@ -239,30 +239,35 @@ configure_mssql_database() {
     echo "Configuring MSSQL database."
     sleep 20
 
+    init_mssql_client
+
     # Create databases.
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
-    "CREATE DATABASE $IDENTITY_DB_NAME;"
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
-    "CREATE DATABASE $SHARED_DB_NAME;"
+    mssql_sqlcmd -Q "CREATE DATABASE $IDENTITY_DB_NAME;"
+    mssql_sqlcmd -Q "CREATE DATABASE $SHARED_DB_NAME;"
 
-    # Copy SQL scripts to the container.
-    docker exec $container_name mkdir -p /tmp/dbscripts/identity
-    docker exec $container_name mkdir -p /tmp/dbscripts/consent
-    docker cp "$DB_SCRIPTS_DIR/identity/mssql.sql" "$container_name:/tmp/dbscripts/identity/mssql.sql"
-    docker cp "$DB_SCRIPTS_DIR/consent/mssql.sql" "$container_name:/tmp/dbscripts/consent/mssql.sql"
-    docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
+    if [ "$MSSQL_CLIENT_MODE" = "container" ]; then
+        # Copy SQL scripts to the container when using container sqlcmd.
+        docker exec $container_name mkdir -p /tmp/dbscripts/identity
+        docker exec $container_name mkdir -p /tmp/dbscripts/consent
+        docker cp "$DB_SCRIPTS_DIR/identity/mssql.sql" "$container_name:/tmp/dbscripts/identity/mssql.sql"
+        docker cp "$DB_SCRIPTS_DIR/consent/mssql.sql" "$container_name:/tmp/dbscripts/consent/mssql.sql"
+        docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
 
-    # Execute SQL scripts.
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
-    $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
-    $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
-    $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
+        # Execute SQL scripts.
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
+        mssql_sqlcmd -d $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
+    else
+        # Execute local SQL scripts directly when using host sqlcmd.
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "$DB_SCRIPTS_DIR/identity/mssql.sql"
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "$DB_SCRIPTS_DIR/consent/mssql.sql"
+        mssql_sqlcmd -d $SHARED_DB_NAME -i "$DB_SCRIPTS_DIR/mssql.sql"
+    fi
 }
 
 configure_mssql_database_arm64() {
     echo "Configuring MSSQL database on ARM64 (Azure SQL Edge)."
+    init_mssql_client
     
     # Wait for Azure SQL Edge to be ready (takes longer on ARM64)
     echo "Waiting for Azure SQL Edge to be ready. This may take a few minutes..."
@@ -273,7 +278,7 @@ configure_mssql_database_arm64() {
     timeout=$((5 * 60))  # 5 minutes timeout
     
     while true; do
-        if docker exec $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q "SELECT 1" &> /dev/null; then
+        if mssql_sqlcmd -Q "SELECT 1" &> /dev/null; then
             echo "Azure SQL Edge is ready."
             break
         fi
@@ -290,25 +295,55 @@ configure_mssql_database_arm64() {
     done
 
     # Create databases.
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
-    "CREATE DATABASE $IDENTITY_DB_NAME;"
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -Q \
-    "CREATE DATABASE $SHARED_DB_NAME;"
+    mssql_sqlcmd -Q "CREATE DATABASE $IDENTITY_DB_NAME;"
+    mssql_sqlcmd -Q "CREATE DATABASE $SHARED_DB_NAME;"
 
-    # Copy SQL scripts to the container.
-    docker exec $container_name mkdir -p /tmp/dbscripts/identity
-    docker exec $container_name mkdir -p /tmp/dbscripts/consent
-    docker cp "$DB_SCRIPTS_DIR/identity/mssql.sql" "$container_name:/tmp/dbscripts/identity/mssql.sql"
-    docker cp "$DB_SCRIPTS_DIR/consent/mssql.sql" "$container_name:/tmp/dbscripts/consent/mssql.sql"
-    docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
+    if [ "$MSSQL_CLIENT_MODE" = "container" ]; then
+        # Copy SQL scripts to the container when using container sqlcmd.
+        docker exec $container_name mkdir -p /tmp/dbscripts/identity
+        docker exec $container_name mkdir -p /tmp/dbscripts/consent
+        docker cp "$DB_SCRIPTS_DIR/identity/mssql.sql" "$container_name:/tmp/dbscripts/identity/mssql.sql"
+        docker cp "$DB_SCRIPTS_DIR/consent/mssql.sql" "$container_name:/tmp/dbscripts/consent/mssql.sql"
+        docker cp "$DB_SCRIPTS_DIR/mssql.sql" "$container_name:/tmp/dbscripts/mssql.sql"
 
-    # Execute SQL scripts.
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
-    $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
-    $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
-    docker exec -i $container_name /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P $DB_PASSWORD -d \
-    $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
+        # Execute SQL scripts.
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "/tmp/dbscripts/identity/mssql.sql"
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "/tmp/dbscripts/consent/mssql.sql"
+        mssql_sqlcmd -d $SHARED_DB_NAME -i "/tmp/dbscripts/mssql.sql"
+    else
+        # Execute local SQL scripts directly when using host sqlcmd.
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "$DB_SCRIPTS_DIR/identity/mssql.sql"
+        mssql_sqlcmd -d $IDENTITY_DB_NAME -i "$DB_SCRIPTS_DIR/consent/mssql.sql"
+        mssql_sqlcmd -d $SHARED_DB_NAME -i "$DB_SCRIPTS_DIR/mssql.sql"
+    fi
+}
+
+init_mssql_client() {
+    # Prefer in-container sqlcmd when available, otherwise fall back to host sqlcmd.
+    if docker exec "$container_name" sh -lc 'test -x /opt/mssql-tools/bin/sqlcmd' &> /dev/null; then
+        MSSQL_CLIENT_MODE="container"
+        MSSQL_SQLCMD_BIN="/opt/mssql-tools/bin/sqlcmd"
+    elif docker exec "$container_name" sh -lc 'test -x /opt/mssql-tools18/bin/sqlcmd' &> /dev/null; then
+        MSSQL_CLIENT_MODE="container"
+        MSSQL_SQLCMD_BIN="/opt/mssql-tools18/bin/sqlcmd"
+    elif command -v sqlcmd >/dev/null 2>&1; then
+        MSSQL_CLIENT_MODE="host"
+        MSSQL_SQLCMD_BIN="sqlcmd"
+        echo "Notice: sqlcmd is not available in container. Using host sqlcmd."
+    else
+        echo "Error: sqlcmd not found in container or host."
+        echo "Install host sqlcmd or use an image that includes mssql-tools."
+        exit 1
+    fi
+}
+
+mssql_sqlcmd() {
+    if [ "$MSSQL_CLIENT_MODE" = "container" ]; then
+        docker exec -i "$container_name" "$MSSQL_SQLCMD_BIN" -S localhost -U SA -P "$DB_PASSWORD" "$@"
+    else
+        # sqlcmd 18 enables TLS by default; -C trusts self-signed certs in local dev.
+        "$MSSQL_SQLCMD_BIN" -S "localhost,$db_port" -U SA -P "$DB_PASSWORD" -C "$@"
+    fi
 }
 
 configure_oracle_database() {
